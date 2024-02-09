@@ -1,13 +1,14 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const ErrorPage = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>
-          ErrorPage
-        </h1>
-      </header>
+    <div className="text-center">
+      <h1 className="h4 text-muted">Страница не найдена</h1>
+      <p className="text-muted">
+        Но вы можете перейти
+        <Link to="/">на главную страницу</Link>
+      </p>
     </div>
   );
 };
