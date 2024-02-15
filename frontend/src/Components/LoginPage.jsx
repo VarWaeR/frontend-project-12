@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import {
@@ -8,9 +8,15 @@ import {
   Card,
   Row,
 } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import useAuth from '../Hooks/index.jsx';
 
 
 const LoginPage = () => {
+  const auth = useAuth();
+  const [authFailed, setAuthFailed] = useState(false);
+  const navigate = useNavigate();
   const inputRef = useRef();
   useEffect(() => {
     inputRef.current.focus();
@@ -21,15 +27,30 @@ const LoginPage = () => {
     password: Yup.string().required('Поле обязательно для заполнения!'),
   })
 
-  const submit = () => console.log('success')
-
   const formik = useFormik({
     initialValues: {
       username: '',
       password: '',
     },
     validationSchema: signInSchema,
-    onSubmit: submit,
+    onSubmit: async (values) => {
+      setAuthFailed(false);
+
+      try {
+        const res = await axios.post('/api/v1/login', values);
+        localStorage.setItem('userId', JSON.stringify(res.data));
+        auth.logIn();
+        navigate("/");
+      } catch (err) {
+        formik.setSubmitting(false);
+        if (err.isAxiosError && err.response.status === 401) {
+          setAuthFailed(true);
+          inputRef.current.select();
+          return;
+        }
+        throw err;
+      }
+    },
   });
   
   return (
@@ -48,7 +69,7 @@ const LoginPage = () => {
                     onChange={formik.handleChange}
                     value={formik.values.username}
                     type="text"
-                    isInvalid={formik.touched.username && formik.errors.username}
+                    isInvalid={authFailed}
                   />
                   <Form.Control.Feedback type="invalid">{formik.errors.username}</Form.Control.Feedback>
                   <Form.Label htmlFor="username">Логин</Form.Label>
@@ -60,7 +81,7 @@ const LoginPage = () => {
                     onChange={formik.handleChange}
                     value={formik.values.password}
                     type="password"
-                    isInvalid={formik.touched.password && formik.errors.password}
+                    isInvalid={authFailed}
                   />
                   <Form.Control.Feedback type="invalid">{formik.errors.password ?? 'Неверные логин или пароль'}</Form.Control.Feedback>
                   <Form.Label htmlFor="password">Пароль</Form.Label>
