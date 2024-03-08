@@ -1,15 +1,38 @@
 import React from 'react';
+import Spinner from 'react-bootstrap/Spinner';
+import ChannelsBox from './ChannelsBox.jsx';
+import ChatBox from './ChatBox.jsx';
+import { useGetChannels } from '../Api/channelsApi.js';
+import { useGetMessages } from '../Api/messagesApi.js';
+import Modal from './Modals.jsx';
 
 const ChatPage = () => {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <h1>
-          ChatPage
-        </h1>
-      </header>
-    </div>
-  );
+  const { isLoading: isChannelsLoading } = useGetChannels();
+  const { isLoading: isMessagessLoading } = useGetMessages();
+
+  return isChannelsLoading || isMessagessLoading
+    ? (
+      <div className="h-100 d-flex justify-content-center align-items-center">
+        <Spinner animation="border" role="status" variant="primary">
+          <span className="visually-hidden">Загрузка</span>
+        </Spinner>
+      </div>
+    )
+    : (
+      <>
+        <Modal />
+        <div className="container h-100 my-4 overflow-hidden rounded shadow">
+          <div className="row h-100 bg-white flex-md-row">
+            <div className="col-4 col-md-2 border-end px-0 bg-light flex-column h-100 d-flex">
+              <ChannelsBox />
+            </div>
+            <div className="col p-0 h-100">
+              <ChatBox />
+            </div>
+          </div>
+        </div>
+      </>
+    );
 };
 
 export default ChatPage;
