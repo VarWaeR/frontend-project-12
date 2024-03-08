@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import ChatPage from './ChatPage';
 import ErrorPage from './ErrorPage';
 import LoginPage from './LoginPage';
+import Header from './Header.jsx';
 import { useLocation } from 'react-router-dom';
 
 const AuthProvider = ({ children }) => {
@@ -42,6 +43,8 @@ const App = () => {
   return (
     <AuthProvider>
       <BrowserRouter>
+      <div className="d-flex flex-column h-100">
+      <Header />
         <Routes>
           <Route path="*" element={<ErrorPage />} />
           <Route path="/" element={(
@@ -50,6 +53,7 @@ const App = () => {
             </PrivateRoute>)} />
           <Route path="login" element={<LoginPage />} />
         </Routes>
+      </div>
       </BrowserRouter>
     </AuthProvider>
   );
