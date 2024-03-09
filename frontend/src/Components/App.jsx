@@ -6,6 +6,7 @@ import ChatPage from './ChatPage';
 import ErrorPage from './ErrorPage';
 import LoginPage from './LoginPage';
 import Header from './Header.jsx';
+import SignUpPage from './SignUpPage.jsx';
 import { useLocation } from 'react-router-dom';
 
 const AuthProvider = ({ children }) => {
@@ -47,6 +48,7 @@ const App = () => {
       <Header />
         <Routes>
           <Route path="*" element={<ErrorPage />} />
+          <Route path="signup" element={<SignUpPage />} />
           <Route path="/" element={(
             <PrivateRoute>
               <ChatPage />

@@ -1,0 +1,120 @@
+import React, { useRef, useEffect, useState } from 'react';
+import { Form, Button } from 'react-bootstrap';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import useAuth from '../Hooks/index.jsx';
+
+const SignUpForm = () => {
+  const [signUpStatus, setSignUpStatus] = useState('');
+  const inputRef = useRef(null);
+  const auth = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
+
+  const signUpSchema = Yup.object().shape({
+    username: Yup.string()
+      .required('Поле обязательно для заполнения')
+      .min(3, 'В поле должно быть не менее 3-х символов')
+      .max(20, 'В поле должно быть не менее 20-и символов'),
+    password: Yup.string().min(6, 'В поле должно быть не менее 6 символов').required('Поле обязательно для заполнения'),
+    passwordConfirm: Yup.string()
+      .required('Поле обязательно для заполнения')
+      .oneOf([Yup.ref('password'), null], 'Пароли должны совпадать'),
+  });
+
+  const formik = useFormik({
+    initialValues: { username: '', password: '', passwordConfirm: '' },
+    validationSchema: signUpSchema,
+    onSubmit: async (values, { setSubmitting }) => {
+      try {
+        const res = await axios.post('/api/v1/login', values);
+        localStorage.setItem('userId', JSON.stringify(res.data));
+        auth.logIn();
+        navigate("/");
+      } catch (error) {
+        if (error.isAxiosError && error.response.status === 409) {
+          setSignUpStatus('userExist');
+          setSubmitting(false);
+        }
+        if (error.isAxiosError && error.response.status === 401) {
+          setSignUpStatus('error');
+        }
+        throw error;
+      }
+    },
+  });
+
+  const {
+    handleSubmit,
+    handleChange,
+    values,
+    touched,
+    errors,
+    isSubmitting,
+  } = formik;
+
+  return (
+    <Form onSubmit={handleSubmit}>
+      <h2 className="text-center mb-4">Регистрация</h2>
+      <Form.Group className="form-floating mb-3">
+        <Form.Control
+          id="username"
+          name="username"
+          onChange={handleChange}
+          value={values.username}
+          type="text"
+          ref={inputRef}
+          isInvalid={(touched.username && !!errors.username) || signUpStatus}
+        />
+        <Form.Label htmlFor="username">Имя пользователя</Form.Label>
+        {(signUpStatus || !!errors.username) && (
+          <Form.Control.Feedback type="invalid" tooltip>
+            {signUpStatus === 'userExist' ? 'Такой пользователь уже существует' : errors.username}
+          </Form.Control.Feedback>
+        )}
+      </Form.Group>
+      <Form.Group className="form-floating mb-4">
+        <Form.Control
+          id="password"
+          name="password"
+          onChange={handleChange}
+          value={values.password}
+          type="password"
+          isInvalid={(touched.password && !!errors.password) || signUpStatus}
+        />
+        <Form.Label htmlFor="password">Пароль</Form.Label>
+        {!!errors.password && (
+          <Form.Control.Feedback type="invalid" tooltip>
+            {errors.password}
+          </Form.Control.Feedback>
+        )}
+      </Form.Group>
+      <Form.Group className="form-floating mb-4">
+        <Form.Control
+          id="passwordConfirm"
+          name="passwordConfirm"
+          onChange={handleChange}
+          value={values.passwordConfirm}
+          type="password"
+          isInvalid={(touched.passwordConfirm && !!errors.passwordConfirm) || signUpStatus}
+        />
+        <Form.Label htmlFor="passwordConfirm">Подтвердите пароль</Form.Label>
+        {!!errors.passwordConfirm && (
+          <Form.Control.Feedback type="invalid" tooltip>
+            {errors.passwordConfirm}
+          </Form.Control.Feedback>
+        )}
+      </Form.Group>
+      <Button disabled={isSubmitting} className="w-100 mb-3" variant="primary" type="submit">
+        Зарегистрироваться
+      </Button>
+    </Form>
+  );
+};
+
+export default SignUpForm;
