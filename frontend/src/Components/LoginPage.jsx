@@ -8,9 +8,10 @@ import {
   Card,
   Row,
 } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import useAuth from '../Hooks/index.jsx';
+import { useTranslation } from 'react-i18next';
 
 
 const LoginPage = () => {
@@ -21,10 +22,11 @@ const LoginPage = () => {
   useEffect(() => {
     inputRef.current.focus();
   }, []);
+  const { t } = useTranslation();
 
   const signInSchema = Yup.object().shape({
-    username: Yup.string().required('Поле обязательно для заполнения!'),
-    password: Yup.string().required('Поле обязательно для заполнения!'),
+    username: Yup.string().required(t('schema.required')),
+    password: Yup.string().required(t('schema.required')),
   })
 
   const formik = useFormik({
@@ -60,7 +62,7 @@ const LoginPage = () => {
           <Card style={{ width: '30rem' }} className="text-center shadow-sm">
             <Card.Body className="row">
               <Form className="form-container mt-3 mt-mb-0" onSubmit={formik.handleSubmit}>
-                <h2 className="text-center mb-4">Войти</h2>
+                <h2 className="text-center mb-4">{t('login.enter')}</h2>
                 <Form.Group className="form-floating mb-3">
                   <Form.Control
                     id="username"
@@ -72,7 +74,7 @@ const LoginPage = () => {
                     isInvalid={authFailed}
                   />
                   <Form.Control.Feedback type="invalid">{formik.errors.username}</Form.Control.Feedback>
-                  <Form.Label htmlFor="username">Логин</Form.Label>
+                  <Form.Label htmlFor="username">{t('login.name')}</Form.Label>
                 </Form.Group>
                 <Form.Group className="form-floating mb-3">
                   <Form.Control
@@ -83,17 +85,24 @@ const LoginPage = () => {
                     type="password"
                     isInvalid={authFailed}
                   />
-                  <Form.Control.Feedback type="invalid">{formik.errors.password ?? 'Неверные логин или пароль'}</Form.Control.Feedback>
-                  <Form.Label htmlFor="password">Пароль</Form.Label>
+                  <Form.Control.Feedback type="invalid">{formik.errors.password ?? t('login.error')}</Form.Control.Feedback>
+                  <Form.Label htmlFor="password">{t('login.password')}</Form.Label>
                 </Form.Group>
                 <Button className="w-100 mb-3" variant="primary" type="submit">
-                  Войти
+                  {t('login.enter')}
                 </Button>
               </Form>
             </Card.Body>
           </Card>
         </Row>
       </Container>
+      <div className="card-footer p-4">
+        <div className="text-center">
+          <span>{t('login.noAccount')}</span>
+          {' '}
+          <Link to="/signup">{t('login.register')}</Link>
+        </div>
+      </div>
     </>
   );
 };

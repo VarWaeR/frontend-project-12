@@ -3,10 +3,12 @@ import { Form, InputGroup, Button } from 'react-bootstrap';
 import { Send } from 'react-bootstrap-icons';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
+import { useTranslation } from 'react-i18next';
 
 import { useAddMessage } from '../Api/messagesApi.js';
 
 const MessagesForm = ({ channel }) => {
+  const { t } = useTranslation();
   const { username } = JSON.parse(localStorage.getItem('userId'));
   const inputRef = useRef(null);
   const [ addMessage ] = useAddMessage();
@@ -51,14 +53,14 @@ const MessagesForm = ({ channel }) => {
           onBlur={formik.handleBlur}
           value={formik.values.body}
           name="body"
-          aria-label="New message"
+          aria-label={t('messages.newMessage')}
           disabled={formik.isSubmitting}
-          placeholder="Введите сообщение..."
+          placeholder={t('messages.placeholder')}
           className="border-0 p-0 ps-2"
         />
         <Button variant="group-vertical" type="submit" disabled={isInvalid}>
           <Send size={20} />
-          <span className="visually-hidden">Отправить</span>
+          <span className="visually-hidden">{t('messages.send')}</span>
         </Button>
       </InputGroup>
     </Form>

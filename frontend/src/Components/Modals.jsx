@@ -7,7 +7,7 @@ import {
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
-
+import { useTranslation } from 'react-i18next';
 import { actions } from '../Slices/index.js';
 import {
   useAddChannel,
@@ -15,15 +15,6 @@ import {
   useDeleteChannel,
   useGetChannels,
 } from '../Api/channelsApi.js';
-
-const getValidationSchema = (channels) => yup.object().shape({
-  name: yup
-    .string()
-    .trim()
-    .required('Поле обязательно для заполнения')
-    .min(1, 'Минимальное количество симовлов: 1')
-    .notOneOf(channels, 'Имя канала не дожно совпадать с ост'),
-});
 
 const AddChannelForm = ({ handleClose }) => {
   const { data: channels } = useGetChannels(undefined);
@@ -33,6 +24,17 @@ const AddChannelForm = ({ handleClose }) => {
     addChannel,
     { error, isLoading },
   ] = useAddChannel();
+  const { t } = useTranslation();
+
+  const getValidationSchema = (channels) => yup.object().shape({
+    name: yup
+      .string()
+      .trim()
+      .required(t('modals.required'))
+      .min(1, t('modals.minName'))
+      .max(20, t('modals.maxName'))
+      .notOneOf(channels, t('modals.uniq')),
+  });
 
   useEffect(() => {
     inputRef.current.focus();
@@ -55,7 +57,7 @@ const AddChannelForm = ({ handleClose }) => {
   return (
     <>
       <BootstrapModal.Header>
-        <BootstrapModal.Title>Добавить</BootstrapModal.Title>
+        <BootstrapModal.Title>{t('modals.addTitle')}</BootstrapModal.Title>
         <Button
           variant="close"
           type="button"
@@ -78,7 +80,7 @@ const AddChannelForm = ({ handleClose }) => {
               name="name"
               id="name"
             />
-            <label className="visually-hidden" htmlFor="name">Название канала</label>
+            <label className="visually-hidden" htmlFor="name">{t('modals.modalName')}</label>
             <Form.Control.Feedback type="invalid">
               {formik.errors.name || formik.status}
             </Form.Control.Feedback>
@@ -89,14 +91,14 @@ const AddChannelForm = ({ handleClose }) => {
                 type="button"
                 onClick={handleClose}
               >
-                Отменить
+                {t('modals.cancellButton')}
               </Button>
               <Button
                 variant="primary"
                 type="submit"
                 disabled={formik.isSubmitting}
               >
-                Отправить
+                {t('modals.confirmButton')}
               </Button>
             </div>
           </Form.Group>
@@ -118,11 +120,12 @@ const RemoveChannelForm = ({ handleClose }) => {
     deleteChannel(channelId);
     handleClose();
   };
+  const { t } = useTranslation();
 
   return (
     <>
       <BootstrapModal.Header>
-        <BootstrapModal.Title>Удалить</BootstrapModal.Title>
+        <BootstrapModal.Title>{t('modals.removeTitle')}</BootstrapModal.Title>
         <Button
           variant="close"
           type="button"
@@ -132,7 +135,7 @@ const RemoveChannelForm = ({ handleClose }) => {
         />
       </BootstrapModal.Header>
       <BootstrapModal.Body>
-        <p className="lead">Подтвердить</p>
+        <p className="lead">{t('modals.sure')}</p>
         <div className="d-flex justify-content-end">
           <Button
             className="me-2"
@@ -141,7 +144,7 @@ const RemoveChannelForm = ({ handleClose }) => {
             onClick={handleClose}
             disabled={loading}
           >
-            Отменить
+            {t('modals.cancelButton')}
           </Button>
           <Button
             variant="danger"
@@ -149,7 +152,7 @@ const RemoveChannelForm = ({ handleClose }) => {
             onClick={handleRemove}
             disabled={loading}
           >
-            Удалить
+            {t('modals.confirmRemove')}
           </Button>
         </div>
       </BootstrapModal.Body>
@@ -167,6 +170,18 @@ const RenameChannelForm = ({ handleClose }) => {
     updateChannel,
     { error, isLoading },
   ] = useUpdateChannel();
+  const { t } = useTranslation();
+
+  const getValidationSchema = (channels) => yup.object().shape({
+    name: yup
+      .string()
+      .trim()
+      .required(t('modals.required'))
+      .min(1, t('modals.minName'))
+      .max(20, t('modals.maxName'))
+      .notOneOf(channels, t('modals.uniq')),
+  });
+
   useEffect(() => {
     setTimeout(() => inputRef.current.select());
   }, []);
@@ -188,7 +203,7 @@ const RenameChannelForm = ({ handleClose }) => {
   return (
     <>
       <BootstrapModal.Header>
-        <BootstrapModal.Title>Переименовать</BootstrapModal.Title>
+        <BootstrapModal.Title>{t('modals.renameTitle')}</BootstrapModal.Title>
         <Button
           variant="close"
           type="button"
@@ -211,7 +226,7 @@ const RenameChannelForm = ({ handleClose }) => {
               name="name"
               id="name"
             />
-            <label className="visually-hidden" htmlFor="name">Название канала</label>
+            <label className="visually-hidden" htmlFor="name">{t('modals.modalName')}</label>
             <Form.Control.Feedback type="invalid">
               {formik.errors.name || formik.status}
             </Form.Control.Feedback>
@@ -222,14 +237,14 @@ const RenameChannelForm = ({ handleClose }) => {
                 type="button"
                 onClick={handleClose}
               >
-                Отменить
+                {t('modals.cancellButton')}
               </Button>
               <Button
                 variant="primary"
                 type="submit"
                 disabled={formik.isSubmitting}
               >
-                Отправить
+                {t('modals.confirmButton')}
               </Button>
             </div>
           </Form.Group>

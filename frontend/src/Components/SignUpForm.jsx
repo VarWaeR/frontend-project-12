@@ -5,12 +5,14 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../Hooks/index.jsx';
+import { useTranslation } from 'react-i18next';
 
 const SignUpForm = () => {
   const [signUpStatus, setSignUpStatus] = useState('');
   const inputRef = useRef(null);
   const auth = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     inputRef.current.focus();
@@ -18,13 +20,13 @@ const SignUpForm = () => {
 
   const signUpSchema = Yup.object().shape({
     username: Yup.string()
-      .required('Поле обязательно для заполнения')
-      .min(3, 'В поле должно быть не менее 3-х символов')
-      .max(20, 'В поле должно быть не менее 20-и символов'),
-    password: Yup.string().min(6, 'В поле должно быть не менее 6 символов').required('Поле обязательно для заполнения'),
+      .required(t('schema.requried'))
+      .min(3, t('schema.nameMin'))
+      .max(20, t('schema.nameMax')),
+    password: Yup.string().min(6, t('schema.passwordMin')).required(t('schema.required')),
     passwordConfirm: Yup.string()
-      .required('Поле обязательно для заполнения')
-      .oneOf([Yup.ref('password'), null], 'Пароли должны совпадать'),
+      .required(t('schema.required'))
+      .oneOf([Yup.ref('password'), null], t('schema.confirmPassword')),
   });
 
   const formik = useFormik({
@@ -60,7 +62,7 @@ const SignUpForm = () => {
 
   return (
     <Form onSubmit={handleSubmit}>
-      <h2 className="text-center mb-4">Регистрация</h2>
+      <h2 className="text-center mb-4">{t('signup.register')}</h2>
       <Form.Group className="form-floating mb-3">
         <Form.Control
           id="username"
@@ -71,10 +73,10 @@ const SignUpForm = () => {
           ref={inputRef}
           isInvalid={(touched.username && !!errors.username) || signUpStatus}
         />
-        <Form.Label htmlFor="username">Имя пользователя</Form.Label>
+        <Form.Label htmlFor="username">{t('signup.name')}</Form.Label>
         {(signUpStatus || !!errors.username) && (
           <Form.Control.Feedback type="invalid" tooltip>
-            {signUpStatus === 'userExist' ? 'Такой пользователь уже существует' : errors.username}
+            {signUpStatus === 'userExist' ? t('signup.userExist') : errors.username}
           </Form.Control.Feedback>
         )}
       </Form.Group>
@@ -87,7 +89,7 @@ const SignUpForm = () => {
           type="password"
           isInvalid={(touched.password && !!errors.password) || signUpStatus}
         />
-        <Form.Label htmlFor="password">Пароль</Form.Label>
+        <Form.Label htmlFor="password">{t('signup.password')}</Form.Label>
         {!!errors.password && (
           <Form.Control.Feedback type="invalid" tooltip>
             {errors.password}
@@ -103,7 +105,7 @@ const SignUpForm = () => {
           type="password"
           isInvalid={(touched.passwordConfirm && !!errors.passwordConfirm) || signUpStatus}
         />
-        <Form.Label htmlFor="passwordConfirm">Подтвердите пароль</Form.Label>
+        <Form.Label htmlFor="passwordConfirm">{t('signup.passwordConfirm')}</Form.Label>
         {!!errors.passwordConfirm && (
           <Form.Control.Feedback type="invalid" tooltip>
             {errors.passwordConfirm}
@@ -111,7 +113,7 @@ const SignUpForm = () => {
         )}
       </Form.Group>
       <Button disabled={isSubmitting} className="w-100 mb-3" variant="primary" type="submit">
-        Зарегистрироваться
+      {t('signup.confirm')}
       </Button>
     </Form>
   );

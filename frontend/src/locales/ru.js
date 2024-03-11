@@ -1,0 +1,75 @@
+const ru = {
+  translation: {
+    nav: {
+      logo: 'Hexlet chat',
+      exit: 'Выйти',
+    },
+    login: {
+      name: 'Ваш ник',
+      password: 'Пароль',
+      enter: 'Войти',
+      noAccount: 'Нет аккаунта?',
+      register: 'Регистрация',
+      error: 'Неверные имя пользователя или пароль',
+    },
+    messages: {
+      message_one: '{{count}} сообщение',
+      message_few: '{{count}} сообщения',
+      message_many: '{{count}} сообщений',
+      send: 'Отправить',
+      placeholder: 'Введите сообщение...',
+      newMessage: 'Новое сообщение',
+    },
+    loading: 'Загрузка...',
+    modals: {
+      modalName: 'Имя канала',
+      addTitle: 'Добавить канал',
+      required: 'Обязательное поле',
+      minName: 'Не менее 1 символа',
+      maxName: 'Не более 20 символов',
+      uniq: 'Должно быть уникальным',
+      cancellButton: 'Отменить',
+      confirmButton: 'Отправить',
+      removeTitle: 'Удалить Канал',
+      sure: 'Уверены?',
+      confirmRemove: 'Удалить',
+      renameTitle: 'Переименовать канал',
+    },
+    channel: {
+      delete: 'Удалить',
+      rename: 'Переименовать',
+      channels: 'Каналы',
+      channelManagement: 'Управление каналом',
+    },
+    schema: {
+      nameMin: 'От 3 до 20 символов',
+      nameMax: 'От 3 до 20 символов',
+      required: 'Обязательное поле',
+      passwordMin: 'Не менее 6 символов',
+      confirmPassword: 'Пароли должны совпадать',
+    },
+    signup: {
+      register: 'Регистрация',
+      name: 'Имя пользователя',
+      password: 'Пароль',
+      passwordConfirm: 'Подтвердите пароль',
+      confirm: 'Зарегистрироваться',
+      userExist: 'Такой пользователь уже существует',
+      networkError: 'Ошибка сети',
+    },
+    toast: {
+      add: 'Канал создан',
+      rename: 'Канал переименован',
+      remove: 'Канал удалён',
+      unknown: 'Неизвестная ошибка',
+      network: 'Ошибка соединения',
+    },
+    notFoundPage: {
+      notFound: 'Страница не найдена',
+      walkTo: 'Но вы можете перейти',
+      teleport: 'на главную страницу',
+    },
+  },
+};
+
+export default ru;
