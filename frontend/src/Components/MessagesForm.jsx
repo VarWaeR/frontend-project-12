@@ -4,7 +4,7 @@ import { Send } from 'react-bootstrap-icons';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
-
+import filter from 'leo-profanity';
 import { useAddMessage } from '../Api/messagesApi.js';
 
 const MessagesForm = ({ channel }) => {
@@ -25,7 +25,7 @@ const MessagesForm = ({ channel }) => {
     validationSchema,
     onSubmit: async ({ body }) => {
       const message = {
-        body: body,
+        body: filter.clean(body),
         channelId: channel.id,
         username,
       };

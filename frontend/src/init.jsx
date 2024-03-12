@@ -8,6 +8,7 @@ import App from './Components/App.jsx';
 import reducer, { actions } from './Slices/index.js';
 import { channelsApi } from './Api/channelsApi.js';
 import { messagesApi } from './Api/messagesApi.js';
+import filter from 'leo-profanity';
 
 const init = async (socket) => {
 
@@ -17,6 +18,7 @@ const init = async (socket) => {
       .concat([channelsApi.middleware, messagesApi.middleware]),
   });
 
+  filter.add(filter.getDictionary('ru'));
   const i18n = i18next.createInstance();
   await i18n.use(initReactI18next).init({
     resources: { ru },

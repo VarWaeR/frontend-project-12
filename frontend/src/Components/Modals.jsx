@@ -16,6 +16,7 @@ import {
   useGetChannels,
 } from '../Api/channelsApi.js';
 import { toast } from 'react-toastify';
+import filter from 'leo-profanity';
 
 const AddChannelForm = ({ handleClose }) => {
   const { data: channels } = useGetChannels(undefined);
@@ -47,8 +48,10 @@ const AddChannelForm = ({ handleClose }) => {
     },
     validationSchema: getValidationSchema(channelNames),
     onSubmit: async ({ name }) => {
-      getValidationSchema(channelNames).validateSync({ name });
-      addChannel({ name });
+      const filteredName = filter.clean(name);
+      const channel = { name: filteredName };
+      getValidationSchema(channelNames).validateSync({ name: filteredName });
+      addChannel(channel);
       toast.success(t('toast.add'));
       handleClose();
     },
@@ -194,8 +197,9 @@ const RenameChannelForm = ({ handleClose }) => {
     },
     validationSchema: getValidationSchema(channelNames),
     onSubmit: async ({ name }) => {
-      const data = { name, id: channelId };
-      getValidationSchema(channelNames).validateSync({ name });
+      const filteredName = filter.clean(name);
+      const data = { name: filteredName, id: channelId };
+      getValidationSchema(channelNames).validateSync({ name: filteredName });
       updateChannel(data);
       toast.success(t('toast.rename'));
       handleClose();
