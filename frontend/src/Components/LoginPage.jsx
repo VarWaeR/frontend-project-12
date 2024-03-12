@@ -12,6 +12,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import useAuth from '../Hooks/index.jsx';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
 
 const LoginPage = () => {
@@ -45,12 +46,17 @@ const LoginPage = () => {
         navigate("/");
       } catch (err) {
         formik.setSubmitting(false);
-        if (err.isAxiosError && err.response.status === 401) {
-          setAuthFailed(true);
-          inputRef.current.select();
+        if (!err.isAxiosError) {
+          toast.error(t('toast.unknown'));
           return;
         }
-        throw err;
+
+        if (err.response?.status === 401) {
+          setAuthFailed(true);
+          inputRef.current.select();
+        } else {
+          toast.error(t('toast.network'));
+        }
       }
     },
   });

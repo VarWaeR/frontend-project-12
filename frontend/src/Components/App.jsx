@@ -8,6 +8,7 @@ import LoginPage from './LoginPage';
 import Header from './Header.jsx';
 import SignUpPage from './SignUpPage.jsx';
 import { useLocation } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 
 const AuthProvider = ({ children }) => {
   const currentUser = JSON.parse(localStorage.getItem('user'));
@@ -55,6 +56,7 @@ const App = () => {
             </PrivateRoute>)} />
           <Route path="login" element={<LoginPage />} />
         </Routes>
+        <ToastContainer />
       </div>
       </BrowserRouter>
     </AuthProvider>

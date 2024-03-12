@@ -15,6 +15,7 @@ import {
   useDeleteChannel,
   useGetChannels,
 } from '../Api/channelsApi.js';
+import { toast } from 'react-toastify';
 
 const AddChannelForm = ({ handleClose }) => {
   const { data: channels } = useGetChannels(undefined);
@@ -48,6 +49,7 @@ const AddChannelForm = ({ handleClose }) => {
     onSubmit: async ({ name }) => {
       getValidationSchema(channelNames).validateSync({ name });
       addChannel({ name });
+      toast.success(t('toast.add'));
       handleClose();
     },
     validateOnBlur: false,
@@ -118,6 +120,7 @@ const RemoveChannelForm = ({ handleClose }) => {
   const handleRemove = async () => {
     setLoading(true);
     deleteChannel(channelId);
+    toast.success(t('toast.remove'));
     handleClose();
   };
   const { t } = useTranslation();
@@ -194,6 +197,7 @@ const RenameChannelForm = ({ handleClose }) => {
       const data = { name, id: channelId };
       getValidationSchema(channelNames).validateSync({ name });
       updateChannel(data);
+      toast.success(t('toast.rename'));
       handleClose();
     },
     validateOnBlur: false,
