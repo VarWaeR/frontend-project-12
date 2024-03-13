@@ -15,7 +15,7 @@ import { toast } from 'react-toastify';
 import useAuth from '../Hooks/index.jsx';
 import routes from '../Routes/routes.js';
 
-const LoginPage = () => {
+function LoginPage() {
   const auth = useAuth();
   const [authFailed, setAuthFailed] = useState(false);
   const navigate = useNavigate();
@@ -111,6 +111,6 @@ const LoginPage = () => {
       </div>
     </>
   );
-};
+}
 
 export default LoginPage;

@@ -6,15 +6,17 @@ import { useGetChannels } from '../Api/channelsApi.js';
 import { useGetMessages } from '../Api/messagesApi.js';
 import MessagesForm from './MessagesForm.jsx';
 
-const Message = ({ username, body }) => (
-  <div className="text-break mb-2">
-    <b>{username}</b>
-    {': '}
-    {body}
-  </div>
-);
+function Message({ username, body }) {
+  return (
+    <div className="text-break mb-2">
+      <b>{username}</b>
+      {': '}
+      {body}
+    </div>
+  );
+}
 
-const ChatBox = () => {
+function ChatBox() {
   const { t } = useTranslation();
   const { data: channels } = useGetChannels(undefined);
   const { data: allMessages } = useGetMessages(undefined);
@@ -43,7 +45,7 @@ const ChatBox = () => {
           </b>
         </p>
         <span className="text-muted">
-        {`${t('messages.message', { count: messages.length })}`}
+          {`${t('messages.message', { count: messages.length })}`}
         </span>
       </div>
       <div id="messages-box" className="chat-messages overflow-auto px-5 ">
@@ -60,6 +62,6 @@ const ChatBox = () => {
       </div>
     </div>
   );
-};
+}
 
 export default ChatBox;

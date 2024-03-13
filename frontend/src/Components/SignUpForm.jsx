@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import useAuth from '../Hooks/index.jsx';
 import routes from '../Routes/routes.js';
 
-const SignUpForm = () => {
+function SignUpForm() {
   const [signUpStatus, setSignUpStatus] = useState('');
   const inputRef = useRef(null);
   const auth = useAuth();
@@ -114,10 +114,10 @@ const SignUpForm = () => {
         )}
       </Form.Group>
       <Button disabled={isSubmitting} className="w-100 mb-3" variant="primary" type="submit">
-      {t('signup.confirm')}
+        {t('signup.confirm')}
       </Button>
     </Form>
   );
-};
+}
 
 export default SignUpForm;

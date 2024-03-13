@@ -2,22 +2,12 @@ env:
   browser: true
   es2021: true
 extends:
-  - eslint:recommended
   - plugin:react/recommended
-  - airbnb-base
+  - airbnb
 overrides: []
 parserOptions:
   ecmaVersion: latest
   sourceType: module
 plugins:
   - react
-  - react-hooks
-rules: 
-  react-hooks/rules-of-hooks: 2
-  react-hooks/exhaustive-deps: 1 
-  quotes: 0
-  object-curly-newline:
-   - error
-   - ImportDeclaration:
-       minProperties: 4
-       multiline: true
+rules: {}

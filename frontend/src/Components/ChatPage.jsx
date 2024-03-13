@@ -7,7 +7,7 @@ import { useGetChannels } from '../Api/channelsApi.js';
 import { useGetMessages } from '../Api/messagesApi.js';
 import Modal from './Modals.jsx';
 
-const ChatPage = () => {
+function ChatPage() {
   const { isLoading: isChannelsLoading } = useGetChannels();
   const { isLoading: isMessagessLoading } = useGetMessages();
 
@@ -36,6 +36,6 @@ const ChatPage = () => {
         </div>
       </>
     );
-};
+}
 
 export default ChatPage;

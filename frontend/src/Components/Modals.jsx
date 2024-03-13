@@ -18,7 +18,7 @@ import {
   useGetChannels,
 } from '../Api/channelsApi.js';
 
-const AddChannelForm = ({ handleClose }) => {
+function AddChannelForm({ handleClose }) {
   const { data: channels } = useGetChannels(undefined);
   const channelNames = channels.map(({ name }) => name);
   const inputRef = useRef(null);
@@ -111,9 +111,9 @@ const AddChannelForm = ({ handleClose }) => {
       </BootstrapModal.Body>
     </>
   );
-};
+}
 
-const RemoveChannelForm = ({ handleClose }) => {
+function RemoveChannelForm({ handleClose }) {
   const [loading, setLoading] = useState(false);
   const [
     deleteChannel,
@@ -164,9 +164,9 @@ const RemoveChannelForm = ({ handleClose }) => {
       </BootstrapModal.Body>
     </>
   );
-};
+}
 
-const RenameChannelForm = ({ handleClose }) => {
+function RenameChannelForm({ handleClose }) {
   const { data: channels } = useGetChannels(undefined);
   const channelNames = channels.map(({ name }) => name);
   const channelId = useSelector((state) => state.ui.modal.extra?.channelId);
@@ -260,7 +260,7 @@ const RenameChannelForm = ({ handleClose }) => {
       </BootstrapModal.Body>
     </>
   );
-};
+}
 
 const mapping = {
   addChannel: AddChannelForm,
@@ -268,7 +268,7 @@ const mapping = {
   renameChannel: RenameChannelForm,
 };
 
-const Modal = () => {
+function Modal() {
   const dispatch = useDispatch();
   const isOpened = useSelector((state) => state.ui.modal.isOpened);
 
@@ -284,6 +284,6 @@ const Modal = () => {
       {Component && <Component handleClose={handleClose} />}
     </BootstrapModal>
   );
-};
+}
 
 export default Modal;
