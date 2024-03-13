@@ -1,7 +1,7 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import ui, { actions } from './channelsSlice.js';
-import { channelsApi } from '../Api/channelsApi.js';
-import { messagesApi } from '../Api/messagesApi.js';
+import ui, { actions } from './channelsSlice';
+import { channelsApi } from '../Api/channelsApi';
+import { messagesApi } from '../Api/messagesApi';
 
 const defaultChannelId = 1;
 
