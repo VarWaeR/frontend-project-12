@@ -28,7 +28,7 @@ const ru = {
       minName: 'Не менее 1 символа',
       maxName: 'Не более 20 символов',
       uniq: 'Должно быть уникальным',
-      cancellButton: 'Отменить',
+      cancelButton: 'Отменить',
       confirmButton: 'Отправить',
       removeTitle: 'Удалить Канал',
       sure: 'Уверены?',

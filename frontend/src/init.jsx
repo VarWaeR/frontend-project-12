@@ -9,6 +9,7 @@ import reducer, { actions } from './Slices/index.js';
 import { channelsApi } from './Api/channelsApi.js';
 import { messagesApi } from './Api/messagesApi.js';
 import filter from 'leo-profanity';
+import { Provider as ProviderRollBar, ErrorBoundary } from '@rollbar/react'
 
 const init = async (socket) => {
 
@@ -24,6 +25,11 @@ const init = async (socket) => {
     resources: { ru },
     fallbackLng: 'ru',
   });
+
+  const rollbarConfig = {
+    accessToken: process.env.REACT_APP_ROLLBAR_TOKEN,
+    environment: 'production',
+  };
 
   socket.on('newMessage', (payload) => {
     store.dispatch(messagesApi.util.updateQueryData('getMessages', undefined, (draftMessages) => {
@@ -56,11 +62,15 @@ const init = async (socket) => {
   });
 
   const vdom = (
-    <Provider store={store}>
-      <I18nextProvider i18n={i18n}>
-        <App />
-      </I18nextProvider>
-    </Provider>
+    <ProviderRollBar config={rollbarConfig}>
+      <ErrorBoundary>
+        <Provider store={store}>
+          <I18nextProvider i18n={i18n}>
+            <App />
+          </I18nextProvider>
+        </Provider>
+      </ErrorBoundary>
+    </ProviderRollBar>
   );
 
   return vdom;
