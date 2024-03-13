@@ -13,6 +13,7 @@ import axios from 'axios';
 import useAuth from '../Hooks/index.jsx';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
+import routes from '../Routes/routes.js';
 
 
 const LoginPage = () => {
@@ -40,10 +41,10 @@ const LoginPage = () => {
       setAuthFailed(false);
 
       try {
-        const res = await axios.post('/api/v1/login', values);
+        const res = await axios.post(routes.loginPath(), values);
         localStorage.setItem('userId', JSON.stringify(res.data));
         auth.logIn();
-        navigate("/");
+        navigate(routes.main());
       } catch (err) {
         formik.setSubmitting(false);
         if (!err.isAxiosError) {

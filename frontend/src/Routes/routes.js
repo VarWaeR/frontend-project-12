@@ -9,3 +9,5 @@ const routes = {
   error: () => '*',
   signup: () => 'signup',
 };
+
+export default routes;

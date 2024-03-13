@@ -24,7 +24,7 @@ const AddChannelForm = ({ handleClose }) => {
   const inputRef = useRef(null);
   const [
     addChannel,
-    { error, isLoading },
+    { error, isLoading }, // eslint-disable-line
   ] = useAddChannel();
   const { t } = useTranslation();
 
@@ -117,7 +117,7 @@ const RemoveChannelForm = ({ handleClose }) => {
   const [loading, setLoading] = useState(false);
   const [
     deleteChannel,
-    { error, isLoading },
+    { error, isLoading }, // eslint-disable-line
   ] = useDeleteChannel();
   const channelId = useSelector((state) => state.ui.modal.extra?.channelId);
   const handleRemove = async () => {
@@ -174,7 +174,7 @@ const RenameChannelForm = ({ handleClose }) => {
   const inputRef = useRef(null);
   const [
     updateChannel,
-    { error, isLoading },
+    { error, isLoading }, // eslint-disable-line
   ] = useUpdateChannel();
   const { t } = useTranslation();
 

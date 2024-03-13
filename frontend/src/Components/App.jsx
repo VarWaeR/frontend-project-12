@@ -9,6 +9,7 @@ import Header from './Header.jsx';
 import SignUpPage from './SignUpPage.jsx';
 import { useLocation } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
+import routes from '../Routes/routes.js';
 
 const AuthProvider = ({ children }) => {
   const currentUser = JSON.parse(localStorage.getItem('user'));
@@ -37,7 +38,7 @@ const PrivateRoute = ({ children }) => {
   const location = useLocation();
   
   return (
-    auth.loggedIn ? children : <Navigate to="/login" state={{ from: location }} />
+    auth.loggedIn ? children : <Navigate to={routes.login()} state={{ from: location }} />
   );
 };
 
@@ -48,13 +49,13 @@ const App = () => {
       <div className="d-flex flex-column h-100">
       <Header />
         <Routes>
-          <Route path="*" element={<ErrorPage />} />
-          <Route path="signup" element={<SignUpPage />} />
-          <Route path="/" element={(
+          <Route path={routes.error()} element={<ErrorPage />} />
+          <Route path={routes.signup()} element={<SignUpPage />} />
+          <Route path={routes.main()} element={(
             <PrivateRoute>
               <ChatPage />
             </PrivateRoute>)} />
-          <Route path="login" element={<LoginPage />} />
+          <Route path={routes.login()} element={<LoginPage />} />
         </Routes>
         <ToastContainer />
       </div>

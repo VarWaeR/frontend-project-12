@@ -6,6 +6,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../Hooks/index.jsx';
 import { useTranslation } from 'react-i18next';
+import routes from '../Routes/routes.js';
 
 const SignUpForm = () => {
   const [signUpStatus, setSignUpStatus] = useState('');
@@ -20,7 +21,7 @@ const SignUpForm = () => {
 
   const signUpSchema = Yup.object().shape({
     username: Yup.string()
-      .required(t('schema.requried'))
+      .required(t('schema.required'))
       .min(3, t('schema.nameMin'))
       .max(20, t('schema.nameMax')),
     password: Yup.string().min(6, t('schema.passwordMin')).required(t('schema.required')),
@@ -34,10 +35,10 @@ const SignUpForm = () => {
     validationSchema: signUpSchema,
     onSubmit: async (values, { setSubmitting }) => {
       try {
-        const res = await axios.post('/api/v1/login', values);
+        const res = await axios.post(routes.signUpPath(), values);
         localStorage.setItem('userId', JSON.stringify(res.data));
         auth.logIn();
-        navigate("/");
+        navigate(routes.main());
       } catch (error) {
         if (error.isAxiosError && error.response.status === 409) {
           setSignUpStatus('userExist');
