@@ -7,12 +7,12 @@ A convenient and intuitive application that allows you to chat with friends, col
 
 ## Package start
 
-*Back-end start
+* Back-end start
 ```
 npm start
 ```
 
-*Front-end start
+* Front-end start
 
 ```
 cd frontend && npm start
