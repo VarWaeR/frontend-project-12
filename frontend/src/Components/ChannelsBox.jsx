@@ -6,13 +6,13 @@ import { useTranslation } from 'react-i18next';
 import { actions } from '../Slices/index.js';
 import { useGetChannels } from '../Api/channelsApi.js';
 
-function Channel({
+const Channel = ({
   channel,
   isCurrent,
   handleChoose,
   handleRemove,
   handleRename,
-}) {
+}) => {
   const { t } = useTranslation();
   const variant = isCurrent ? 'secondary' : null;
 
@@ -54,9 +54,9 @@ function Channel({
         )}
     </li>
   );
-}
+};
 
-function ChannelsBox() {
+const ChannelsBox = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { data: channels } = useGetChannels(undefined);
@@ -107,6 +107,6 @@ function ChannelsBox() {
       </ul>
     </>
   );
-}
+};
 
 export default ChannelsBox;

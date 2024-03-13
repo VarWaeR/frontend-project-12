@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import routes from '../Routes/routes.js';
 
-function ErrorPage() {
+const ErrorPage = () => {
   const { t } = useTranslation();
   return (
     <div className="text-center">
@@ -15,6 +15,6 @@ function ErrorPage() {
       </p>
     </div>
   );
-}
+};
 
 export default ErrorPage;

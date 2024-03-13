@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import useAuth from '../Hooks/index.jsx';
 import routes from '../Routes/routes.js';
 
-function Header() {
+const Header = () => {
   const { t } = useTranslation();
   const auth = useAuth();
 
@@ -26,6 +26,6 @@ function Header() {
       </Container>
     </Navbar>
   );
-}
+};
 
 export default Header;

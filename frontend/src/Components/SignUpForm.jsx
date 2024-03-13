@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import useAuth from '../Hooks/index.jsx';
 import routes from '../Routes/routes.js';
 
-function SignUpForm() {
+const SignUpForm = () => {
   const [signUpStatus, setSignUpStatus] = useState('');
   const inputRef = useRef(null);
   const auth = useAuth();
@@ -118,6 +118,6 @@ function SignUpForm() {
       </Button>
     </Form>
   );
-}
+};
 
 export default SignUpForm;

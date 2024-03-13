@@ -18,7 +18,7 @@ import {
   useGetChannels,
 } from '../Api/channelsApi.js';
 
-function AddChannelForm({ handleClose }) {
+const AddChannelForm = ({ handleClose }) => {
   const { data: channels } = useGetChannels(undefined);
   const channelNames = channels.map(({ name }) => name);
   const inputRef = useRef(null);
@@ -28,14 +28,14 @@ function AddChannelForm({ handleClose }) {
   ] = useAddChannel();
   const { t } = useTranslation();
 
-  const getValidationSchema = (channels) => yup.object().shape({
+  const getValidationSchema = (channelsNames) => yup.object().shape({
     name: yup
       .string()
       .trim()
       .required(t('modals.required'))
       .min(1, t('modals.minName'))
       .max(20, t('modals.maxName'))
-      .notOneOf(channels, t('modals.uniq')),
+      .notOneOf(channelsNames, t('modals.uniq')),
   });
 
   useEffect(() => {
@@ -111,14 +111,16 @@ function AddChannelForm({ handleClose }) {
       </BootstrapModal.Body>
     </>
   );
-}
+};
 
-function RemoveChannelForm({ handleClose }) {
+const RemoveChannelForm = ({ handleClose }) => {
   const [loading, setLoading] = useState(false);
   const [
     deleteChannel,
     { error, isLoading }, // eslint-disable-line
   ] = useDeleteChannel();
+  const { t } = useTranslation();
+
   const channelId = useSelector((state) => state.ui.modal.extra?.channelId);
   const handleRemove = async () => {
     setLoading(true);
@@ -126,7 +128,6 @@ function RemoveChannelForm({ handleClose }) {
     toast.success(t('toast.remove'));
     handleClose();
   };
-  const { t } = useTranslation();
 
   return (
     <>
@@ -164,9 +165,9 @@ function RemoveChannelForm({ handleClose }) {
       </BootstrapModal.Body>
     </>
   );
-}
+};
 
-function RenameChannelForm({ handleClose }) {
+const RenameChannelForm = ({ handleClose }) => {
   const { data: channels } = useGetChannels(undefined);
   const channelNames = channels.map(({ name }) => name);
   const channelId = useSelector((state) => state.ui.modal.extra?.channelId);
@@ -178,14 +179,14 @@ function RenameChannelForm({ handleClose }) {
   ] = useUpdateChannel();
   const { t } = useTranslation();
 
-  const getValidationSchema = (channels) => yup.object().shape({
+  const getValidationSchema = (channelsNames) => yup.object().shape({
     name: yup
       .string()
       .trim()
       .required(t('modals.required'))
       .min(1, t('modals.minName'))
       .max(20, t('modals.maxName'))
-      .notOneOf(channels, t('modals.uniq')),
+      .notOneOf(channelsNames, t('modals.uniq')),
   });
 
   useEffect(() => {
@@ -260,7 +261,7 @@ function RenameChannelForm({ handleClose }) {
       </BootstrapModal.Body>
     </>
   );
-}
+};
 
 const mapping = {
   addChannel: AddChannelForm,
@@ -268,7 +269,7 @@ const mapping = {
   renameChannel: RenameChannelForm,
 };
 
-function Modal() {
+const Modal = () => {
   const dispatch = useDispatch();
   const isOpened = useSelector((state) => state.ui.modal.isOpened);
 
@@ -284,6 +285,6 @@ function Modal() {
       {Component && <Component handleClose={handleClose} />}
     </BootstrapModal>
   );
-}
+};
 
 export default Modal;

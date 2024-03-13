@@ -6,30 +6,28 @@ import { useGetChannels } from '../Api/channelsApi.js';
 import { useGetMessages } from '../Api/messagesApi.js';
 import MessagesForm from './MessagesForm.jsx';
 
-function Message({ username, body }) {
-  return (
-    <div className="text-break mb-2">
-      <b>{username}</b>
-      {': '}
-      {body}
-    </div>
-  );
-}
+const Message = ({ username, body }) => (
+  <div className="text-break mb-2">
+    <b>{username}</b>
+    {': '}
+    {body}
+  </div>
+);
 
-function ChatBox() {
+const ChatBox = () => {
   const { t } = useTranslation();
   const { data: channels } = useGetChannels(undefined);
   const { data: allMessages } = useGetMessages(undefined);
 
   const channel = useSelector((state) => {
     const { currentChannelId } = state.ui;
-    return channels?.find((channel) => channel.id === currentChannelId);
+    return channels?.find((item) => item.id === currentChannelId);
   });
 
   const messages = useSelector((state) => {
     const { currentChannelId } = state.ui;
-    const channelMessages = allMessages?.filter((message) => message.channelId === currentChannelId);
-    return channelMessages;
+    const channelMessage = allMessages?.filter((message) => message.channelId === currentChannelId);
+    return channelMessage;
   });
 
   useEffect(() => {
@@ -62,6 +60,6 @@ function ChatBox() {
       </div>
     </div>
   );
-}
+};
 
 export default ChatBox;

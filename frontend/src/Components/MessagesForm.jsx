@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import filter from 'leo-profanity';
 import { useAddMessage } from '../Api/messagesApi.js';
 
-function MessagesForm({ channel }) {
+const MessagesForm = ({ channel }) => {
   const { t } = useTranslation();
   const { username } = JSON.parse(localStorage.getItem('userId'));
   const inputRef = useRef(null);
@@ -65,6 +65,6 @@ function MessagesForm({ channel }) {
       </InputGroup>
     </Form>
   );
-}
+};
 
 export default MessagesForm;
