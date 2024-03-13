@@ -96,7 +96,7 @@ const AddChannelForm = ({ handleClose }) => {
                 type="button"
                 onClick={handleClose}
               >
-                {t('modals.cancellButton')}
+                {t('modals.cancelButton')}
               </Button>
               <Button
                 variant="primary"
@@ -245,7 +245,7 @@ const RenameChannelForm = ({ handleClose }) => {
                 type="button"
                 onClick={handleClose}
               >
-                {t('modals.cancellButton')}
+                {t('modals.cancelButton')}
               </Button>
               <Button
                 variant="primary"
