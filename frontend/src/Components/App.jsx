@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
+import {
+  BrowserRouter, Routes, Route, Navigate,
+  useLocation,
+} from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 import AuthContext from '../Contexts/index.jsx';
 import useAuth from '../Hooks/index.jsx';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import ChatPage from './ChatPage';
 import ErrorPage from './ErrorPage';
 import LoginPage from './LoginPage';
 import Header from './Header.jsx';
 import SignUpPage from './SignUpPage.jsx';
-import { useLocation } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
 import routes from '../Routes/routes.js';
 
 const AuthProvider = ({ children }) => {
@@ -36,14 +38,13 @@ const AuthProvider = ({ children }) => {
 const PrivateRoute = ({ children }) => {
   const auth = useAuth();
   const location = useLocation();
-  
+
   return (
     auth.loggedIn ? children : <Navigate to={routes.login()} state={{ from: location }} />
   );
 };
 
-const App = () => {
-  return (
+const App = () => (
     <AuthProvider>
       <BrowserRouter>
       <div className="d-flex flex-column h-100">
@@ -61,7 +62,6 @@ const App = () => {
       </div>
       </BrowserRouter>
     </AuthProvider>
-  );
-}
+);
 
 export default App;

@@ -3,16 +3,15 @@ import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import i18next from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
+import filter from 'leo-profanity';
+import { Provider as ProviderRollBar, ErrorBoundary } from '@rollbar/react';
 import ru from './locales/ru';
 import App from './Components/App.jsx';
 import reducer, { actions } from './Slices/index.js';
 import { channelsApi } from './Api/channelsApi.js';
 import { messagesApi } from './Api/messagesApi.js';
-import filter from 'leo-profanity';
-import { Provider as ProviderRollBar, ErrorBoundary } from '@rollbar/react'
 
 const init = async (socket) => {
-
   const store = configureStore({
     reducer,
     middleware: (getDefaultMiddleware) => getDefaultMiddleware()

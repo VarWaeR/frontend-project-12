@@ -10,11 +10,10 @@ import {
 } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import useAuth from '../Hooks/index.jsx';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
+import useAuth from '../Hooks/index.jsx';
 import routes from '../Routes/routes.js';
-
 
 const LoginPage = () => {
   const auth = useAuth();
@@ -29,7 +28,7 @@ const LoginPage = () => {
   const signInSchema = Yup.object().shape({
     username: Yup.string().required(t('schema.required')),
     password: Yup.string().required(t('schema.required')),
-  })
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -61,7 +60,7 @@ const LoginPage = () => {
       }
     },
   });
-  
+
   return (
     <>
       <Container fluid className="h-100 m-3">

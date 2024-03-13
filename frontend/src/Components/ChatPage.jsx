@@ -1,11 +1,11 @@
 import React from 'react';
 import Spinner from 'react-bootstrap/Spinner';
+import { useTranslation } from 'react-i18next';
 import ChannelsBox from './ChannelsBox.jsx';
 import ChatBox from './ChatBox.jsx';
 import { useGetChannels } from '../Api/channelsApi.js';
 import { useGetMessages } from '../Api/messagesApi.js';
 import Modal from './Modals.jsx';
-import { useTranslation } from 'react-i18next';
 
 const ChatPage = () => {
   const { isLoading: isChannelsLoading } = useGetChannels();

@@ -8,6 +8,8 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
+import filter from 'leo-profanity';
 import { actions } from '../Slices/index.js';
 import {
   useAddChannel,
@@ -15,8 +17,6 @@ import {
   useDeleteChannel,
   useGetChannels,
 } from '../Api/channelsApi.js';
-import { toast } from 'react-toastify';
-import filter from 'leo-profanity';
 
 const AddChannelForm = ({ handleClose }) => {
   const { data: channels } = useGetChannels(undefined);

@@ -11,7 +11,7 @@ const MessagesForm = ({ channel }) => {
   const { t } = useTranslation();
   const { username } = JSON.parse(localStorage.getItem('userId'));
   const inputRef = useRef(null);
-  const [ addMessage ] = useAddMessage();
+  const [addMessage] = useAddMessage();
 
   const validationSchema = yup.object().shape({
     body: yup
@@ -29,7 +29,7 @@ const MessagesForm = ({ channel }) => {
         channelId: channel.id,
         username,
       };
-      
+
       addMessage(message);
       formik.resetForm();
       formik.setSubmitting(false);

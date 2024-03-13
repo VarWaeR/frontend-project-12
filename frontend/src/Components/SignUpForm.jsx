@@ -4,8 +4,8 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import useAuth from '../Hooks/index.jsx';
 import { useTranslation } from 'react-i18next';
+import useAuth from '../Hooks/index.jsx';
 import routes from '../Routes/routes.js';
 
 const SignUpForm = () => {
