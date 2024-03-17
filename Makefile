@@ -1,6 +1,9 @@
 lint-frontend:
 	make -C frontend lint
 
+lint:
+	npx eslint .
+
 install:
 	npm ci
 
