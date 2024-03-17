@@ -1,5 +1,5 @@
 lint-frontend:
-	make -C frontend lint
+	cd frontend && npx eslint .
 
 lint:
 	npx eslint .
