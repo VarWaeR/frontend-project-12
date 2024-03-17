@@ -14,6 +14,8 @@ import LoginPage from './LoginPage';
 import Header from './Header.jsx';
 import SignUpPage from './SignUpPage.jsx';
 import routes from '../Routes/routes.js';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AuthProvider = ({ children }) => {
   const currentUser = JSON.parse(localStorage.getItem('user'));

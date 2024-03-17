@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom/client';
 import { io } from 'socket.io-client';
 import init from './init';
 
-import './index.css';
 import reportWebVitals from './reportWebVitals';
 
 const app = async () => {
