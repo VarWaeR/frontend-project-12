@@ -1,5 +1,6 @@
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/VarWaeR/frontend-project-12/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/VarWaeR/frontend-project-12/actions)
+[![Lint](https://github.com/VarWaeR/frontend-project-12/actions/workflows/linter-check.yml/badge.svg)](https://github.com/VarWaeR/frontend-project-12/actions/workflows/linter-check.yml)
 [![Maintainability](https://api.codeclimate.com/v1/badges/6e71efb158d3234bdf66/maintainability)](https://codeclimate.com/github/VarWaeR/frontend-project-12/maintainability)
 
 ## Description
