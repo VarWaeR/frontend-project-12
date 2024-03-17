@@ -38,12 +38,6 @@ const slice = createSlice({
         state.currentChannelId = action.payload.id;
       },
     );
-    builder.addMatcher(
-      channelsApi.endpoints.deleteChannel.matchFulfilled,
-      (state) => {
-        state.currentChannelId = state.defaultChannelId;
-      },
-    );
   },
 });
 
