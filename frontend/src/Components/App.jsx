@@ -18,7 +18,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 
 const AuthProvider = ({ children }) => {
-  const currentUser = JSON.parse(localStorage.getItem('user'));
+  const currentUser = JSON.parse(localStorage.getItem('userId'));
   const [loggedIn, setLoggedIn] = useState(currentUser ? { username: currentUser.username } : null);
 
   const logIn = () => setLoggedIn(true);
@@ -27,13 +27,14 @@ const AuthProvider = ({ children }) => {
     setLoggedIn(false);
   };
   const getAuthHeader = () => {
-    const userData = JSON.parse(localStorage.getItem('user'));
+    const userData = JSON.parse(localStorage.getItem('userId'));
 
     return userData?.token ? { Authorization: `Bearer ${userData.token}` } : {};
   };
 
   return (
     <AuthContext.Provider value={{
+      currentUser,
       loggedIn,
       logIn,
       logOut,

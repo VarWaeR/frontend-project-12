@@ -10,22 +10,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import filter from 'leo-profanity';
-import { actions } from '../Slices/index.js';
-import {
-  useAddChannel,
-  useUpdateChannel,
-  useDeleteChannel,
-  useGetChannels,
-} from '../Api/channelsApi.js';
+import { actions, selectors } from '../Slices/channelsSlice.js';
+import { useApi } from '../Hooks/index';
 
 const AddChannelForm = ({ handleClose }) => {
-  const { data: channels } = useGetChannels(undefined);
+  const channels = useSelector(selectors.selectAll);
   const channelNames = channels.map(({ name }) => name);
   const inputRef = useRef(null);
-  const [
-    addChannel,
-    { error, isLoading }, // eslint-disable-line
-  ] = useAddChannel();
+  const addChannel = useApi();
   const { t } = useTranslation();
 
   const getValidationSchema = (channelsNames) => yup.object().shape({
@@ -48,12 +40,20 @@ const AddChannelForm = ({ handleClose }) => {
     },
     validationSchema: getValidationSchema(channelNames),
     onSubmit: async ({ name }) => {
-      const filteredName = filter.clean(name);
-      const channel = { name: filteredName };
-      getValidationSchema(channelNames).validateSync({ name: filteredName });
-      addChannel(channel);
-      toast.success(t('toast.add'));
-      handleClose();
+      try {
+        const filteredName = filter.clean(name);
+        const channel = { name: filteredName };
+        getValidationSchema(channelNames).validateSync({ name: filteredName });
+        await addChannel(channel);
+        toast.success(t('toast.add'));
+        handleClose();
+      } catch (error) {
+        if (!error.isAxiosError) {
+          toast.error(t('errors.unknown'));
+        } else {
+          toast.error(t('errors.network'));
+        }
+      }
     },
     validateOnBlur: false,
     validateOnChange: false,
@@ -115,18 +115,25 @@ const AddChannelForm = ({ handleClose }) => {
 
 const RemoveChannelForm = ({ handleClose }) => {
   const [loading, setLoading] = useState(false);
-  const [
-    deleteChannel,
-    { error, isLoading }, // eslint-disable-line
-  ] = useDeleteChannel();
+  const deleteChannel = useApi();
   const { t } = useTranslation();
 
   const channelId = useSelector((state) => state.ui.modal.extra?.channelId);
   const handleRemove = async () => {
     setLoading(true);
-    deleteChannel(channelId);
-    toast.success(t('toast.remove'));
-    handleClose();
+    try {
+      await deleteChannel(channelId);
+      toast.success(t('toast.remove'));
+      handleClose();
+    } catch (error) {
+      if (!error.isAxiosError) {
+        toast.error(t('errors.unknown'));
+      } else {
+        toast.error(t('errors.network'));
+      }
+      setLoading(false);
+      throw error;
+    }
   };
 
   return (
@@ -168,15 +175,12 @@ const RemoveChannelForm = ({ handleClose }) => {
 };
 
 const RenameChannelForm = ({ handleClose }) => {
-  const { data: channels } = useGetChannels(undefined);
+  const channels = useSelector(selectors.selectAll);
   const channelNames = channels.map(({ name }) => name);
   const channelId = useSelector((state) => state.ui.modal.extra?.channelId);
   const channel = channels.find(({ id }) => channelId === id);
   const inputRef = useRef(null);
-  const [
-    updateChannel,
-    { error, isLoading }, // eslint-disable-line
-  ] = useUpdateChannel();
+  const renameChannel = useApi();
   const { t } = useTranslation();
 
   const getValidationSchema = (channelsNames) => yup.object().shape({
@@ -201,7 +205,7 @@ const RenameChannelForm = ({ handleClose }) => {
       const filteredName = filter.clean(name);
       const data = { name: filteredName, id: channelId };
       getValidationSchema(channelNames).validateSync({ name: filteredName });
-      updateChannel(data);
+      await renameChannel(data);
       toast.success(t('toast.rename'));
       handleClose();
     },

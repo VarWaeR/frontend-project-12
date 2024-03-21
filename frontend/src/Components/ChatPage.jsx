@@ -1,26 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import Spinner from 'react-bootstrap/Spinner';
 import { useTranslation } from 'react-i18next';
 import ChannelsBox from './ChannelsBox.jsx';
 import ChatBox from './ChatBox.jsx';
-import { useGetChannels } from '../Api/channelsApi.js';
-import { useGetMessages } from '../Api/messagesApi.js';
 import Modal from './Modals.jsx';
+import useAuth from '../Hooks/index.jsx';
+import { fetchChannels } from '../Slices/channelsSlice.js';
 
 const ChatPage = () => {
-  const { isLoading: isChannelsLoading } = useGetChannels();
-  const { isLoading: isMessagessLoading } = useGetMessages();
+  const dispatch = useDispatch();
+  const { getAuthHeader } = useAuth();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    dispatch(fetchChannels(getAuthHeader()));
+    setLoading(false);
+  }, [dispatch, getAuthHeader]);
 
   const { t } = useTranslation();
 
-  return isChannelsLoading || isMessagessLoading
-    ? (
-      <div className="h-100 d-flex justify-content-center align-items-center">
-        <Spinner animation="border" role="status" variant="primary">
-          <span className="visually-hidden">{t('loading')}</span>
-        </Spinner>
-      </div>
-    )
+  return loading ? (
+    <div className="h-100 d-flex justify-content-center align-items-center">
+      <Spinner animation="border" role="status" variant="primary">
+        <span className="visually-hidden">{t('loading')}</span>
+      </Spinner>
+    </div>
+  )
     : (
       <>
         <Modal />

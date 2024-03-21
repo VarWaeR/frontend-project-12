@@ -4,14 +4,16 @@ import { Send } from 'react-bootstrap-icons';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 import filter from 'leo-profanity';
-import { useAddMessage } from '../Api/messagesApi.js';
+import useAuth, { useApi } from '../Hooks/index.jsx';
 
 const MessagesForm = ({ channel }) => {
   const { t } = useTranslation();
-  const { username } = JSON.parse(localStorage.getItem('userId'));
+  const auth = useAuth();
+  const username = auth.currentUser;
   const inputRef = useRef(null);
-  const [addMessage] = useAddMessage();
+  const addNewMessage = useApi();
 
   const validationSchema = yup.object().shape({
     body: yup
@@ -29,11 +31,19 @@ const MessagesForm = ({ channel }) => {
         channelId: channel.id,
         username,
       };
-
-      addMessage(message);
-      formik.resetForm();
-      formik.setSubmitting(false);
-      inputRef.current.focus();
+      try {
+        await addNewMessage(message);
+        formik.resetForm();
+        formik.setSubmitting(false);
+        inputRef.current.focus();
+      } catch (error) {
+        if (!error.isAxiosError) {
+          toast.error(t('errors.unknown'));
+        } else {
+          toast.error(t('errors.network'));
+        }
+        throw error;
+      }
     },
     validateOnBlur: false,
   });

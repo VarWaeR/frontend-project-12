@@ -1,23 +1,26 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { configureStore } from '@reduxjs/toolkit';
 import i18next from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import filter from 'leo-profanity';
 import { Provider as ProviderRollBar, ErrorBoundary } from '@rollbar/react';
 import ru from './locales/ru';
 import App from './Components/App.jsx';
-import reducer, { actions } from './Slices/index.js';
-import { channelsApi } from './Api/channelsApi.js';
-import { messagesApi } from './Api/messagesApi.js';
+import store from './Slices/index.js';
+import { actions as channelsActions } from './Slices/channelsSlice';
+import { actions as messagesActions } from './Slices/messagesSlice';
+import { ApiContext } from './Contexts/index.jsx';
+
+const promosifySocket = (socket, type, data) => new Promise((resolve, reject) => {
+  socket.timeout(5000).emit(type, data, (err, response) => {
+    if (err) {
+      reject(err);
+    }
+    resolve(response);
+  });
+});
 
 const init = async (socket) => {
-  const store = configureStore({
-    reducer,
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware()
-      .concat([channelsApi.middleware, messagesApi.middleware]),
-  });
-
   filter.add(filter.getDictionary('ru'));
   const i18n = i18next.createInstance();
   await i18n.use(initReactI18next).init({
@@ -31,41 +34,42 @@ const init = async (socket) => {
   };
 
   socket.on('newMessage', (payload) => {
-    store.dispatch(messagesApi.util.updateQueryData('getMessages', undefined, (draftMessages) => {
-      draftMessages.push(payload);
-    }));
+    const { addMessage } = messagesActions;
+    store.dispatch(addMessage(payload));
   });
 
   socket.on('newChannel', (payload) => {
-    store.dispatch(channelsApi.util.updateQueryData('getChannels', undefined, (draftChannels) => {
-      draftChannels.push(payload);
-    }));
+    store.dispatch(channelsActions.addChannel(payload));
   });
 
-  socket.on('removeChannel', (payload) => {
-    store.dispatch(channelsApi.util.updateQueryData('getChannels', undefined, (draftChannels) => {
-      const newChannels = draftChannels.filter((channel) => channel.id !== payload.id);
-      const state = store.getState();
-      if (state.ui.currentChannelId === payload.id) {
-        store.dispatch(actions.setCurrentChannel(state.ui.defaultChannelId));
-      }
-      return newChannels;
-    }));
+  socket.on('removeChannel', ({ id }) => {
+    store.dispatch(channelsActions.removeChannel(id));
   });
 
   socket.on('renameChannel', (payload) => {
-    store.dispatch(channelsApi.util.updateQueryData('getChannels', undefined, (draftChannels) => {
-      const channel = draftChannels.find((item) => item.id === payload.id);
-      channel.name = payload.name;
-    }));
+    store.dispatch(channelsActions.renameChannel(payload));
   });
+
+  const addNewMessage = (message) => promosifySocket(socket, 'newMessage', message);
+  const createChannel = (channel) => promosifySocket(socket, 'newChannel', channel);
+  const removeChannel = (channelId) => promosifySocket(socket, 'removeChannel', channelId);
+  const renameChannel = (channel) => promosifySocket(socket, 'renameChannel', channel);
+
+  const api = {
+    addNewMessage,
+    createChannel,
+    removeChannel,
+    renameChannel,
+  };
 
   const vdom = (
     <ProviderRollBar config={rollbarConfig}>
       <ErrorBoundary>
         <Provider store={store}>
           <I18nextProvider i18n={i18n}>
-            <App />
+            <ApiContext.Provider value={api}>
+              <App />
+            </ApiContext.Provider>
           </I18nextProvider>
         </Provider>
       </ErrorBoundary>

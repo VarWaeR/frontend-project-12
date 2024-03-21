@@ -4,8 +4,8 @@ import { Button, Dropdown, ButtonGroup } from 'react-bootstrap';
 import { PlusSquare } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 import { animateScroll } from 'react-scroll';
-import { actions, defaultChannelId } from '../Slices/index.js';
-import { useGetChannels } from '../Api/channelsApi.js';
+import { defaultChannelId } from '../Slices/index.js';
+import { actions, selectors } from '../Slices/channelsSlice.js';
 
 const Channel = ({
   channel,
@@ -60,7 +60,7 @@ const Channel = ({
 const ChannelsBox = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const { data: channels } = useGetChannels(undefined);
+  const channels = useSelector(selectors.selectAll);
 
   const currentChannelId = useSelector((state) => state.ui.currentChannelId);
   const lastChannelsItemId = channels.at(-1).id;

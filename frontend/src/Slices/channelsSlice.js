@@ -1,7 +1,20 @@
 /* eslint-disable no-param-reassign */
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, createEntityAdapter } from '@reduxjs/toolkit';
+import axios from 'axios';
 
-import { channelsApi } from '../Api/channelsApi';
+export const fetchChannels = createAsyncThunk(
+  'channels/fetchChannels',
+  async (header) => {
+    try {
+      const response = await axios.get('/api/v1/channels', { headers: header });
+      return response.data;
+    } catch (err) {
+      throw new Error(`Error: ${err}`);
+    }
+  },
+);
+
+const channelsAdapter = createEntityAdapter();
 
 const slice = createSlice({
   name: 'ui',
@@ -15,6 +28,10 @@ const slice = createSlice({
     },
   },
   reducers: {
+    setChannels: (state, { payload }) => channelsAdapter.addMany(state, payload),
+    addChannel: (state, { payload }) => channelsAdapter.addOne(state, payload),
+    deleteChannel: (state, { payload }) => channelsAdapter.removeOne(state, payload),
+    updateChannel: channelsAdapter.upsertOne,
     setCurrentChannel(state, { payload }) {
       const { channelId } = payload;
       state.currentChannelId = channelId;
@@ -32,14 +49,16 @@ const slice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addMatcher(
-      channelsApi.endpoints.addChannel.matchFulfilled,
-      (state, action) => {
-        state.currentChannelId = action.payload.id;
-      },
-    );
+    builder
+      .addCase(fetchChannels.fulfilled, (state, action) => {
+        channelsAdapter.setAll(state, action.payload);
+      });
   },
 });
 
 export const { actions } = slice;
+export const selectors = channelsAdapter.getSelectors((state) => {
+  console.log(state);
+  return state.ui;
+});
 export default slice.reducer;

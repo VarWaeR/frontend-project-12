@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 import { animateScroll } from 'react-scroll';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { useGetChannels } from '../Api/channelsApi.js';
-import { useGetMessages } from '../Api/messagesApi.js';
+import { selectors as selectorsChannels } from '../Slices/channelsSlice.js';
+import { selectors as selectorsMessages } from '../Slices/messagesSlice.js';
 import MessagesForm from './MessagesForm.jsx';
 
 const Message = ({ username, body }) => (
@@ -16,8 +16,10 @@ const Message = ({ username, body }) => (
 
 const ChatBox = () => {
   const { t } = useTranslation();
-  const { data: channels } = useGetChannels(undefined);
-  const { data: allMessages } = useGetMessages(undefined);
+  const channels = selectorsChannels.selectAll();
+  console.log(channels);
+  const allMessages = useSelector(selectorsMessages.selectAll);
+  console.log(allMessages);
 
   const channel = useSelector((state) => {
     const { currentChannelId } = state.ui;
