@@ -1,24 +1,47 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Spinner from 'react-bootstrap/Spinner';
 import { useTranslation } from 'react-i18next';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 import ChannelsBox from './ChannelsBox.jsx';
 import ChatBox from './ChatBox.jsx';
 import Modal from './Modals.jsx';
 import useAuth from '../Hooks/index.jsx';
-import { fetchChannels } from '../Slices/channelsSlice.js';
+import { actions, selectors } from '../Slices/channelsSlice.js';
 
 const ChatPage = () => {
   const dispatch = useDispatch();
   const { getAuthHeader } = useAuth();
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation();
 
   useEffect(() => {
-    dispatch(fetchChannels(getAuthHeader()));
-    setLoading(false);
-  }, [dispatch, getAuthHeader]);
+    const fetchData = async () => {
+      try {
+        const { data } = await axios.get('api/v1/channels', {
+          headers: getAuthHeader(),
+        });
+        const { channels, currentChannelId } = data;
+        dispatch(actions.addChannels(channels));
+        dispatch(actions.setCurrentChannel(currentChannelId));
+      } catch (error) {
+        if (!error.isAxiosError) {
+          toast.error(t('errors.unknown'));
+        } else {
+          toast.error(t('errors.network'));
+        }
 
-  const { t } = useTranslation();
+        throw error;
+      }
+      setLoading(false);
+    };
+
+    fetchData();
+  }, [dispatch, getAuthHeader, t]);
+
+  const chans = useSelector(selectors.selectAll);
+  console.log(chans);
 
   return loading ? (
     <div className="h-100 d-flex justify-content-center align-items-center">

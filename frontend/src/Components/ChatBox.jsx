@@ -16,7 +16,7 @@ const Message = ({ username, body }) => (
 
 const ChatBox = () => {
   const { t } = useTranslation();
-  const channels = selectorsChannels.selectAll();
+  const channels = useSelector(selectorsChannels.selectAll);
   console.log(channels);
   const allMessages = useSelector(selectorsMessages.selectAll);
   console.log(allMessages);

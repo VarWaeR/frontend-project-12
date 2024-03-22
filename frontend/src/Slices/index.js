@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import channelsReducers from './channelsSlice.js';
+import messagesReducers from './messagesSlice.js';
 
 const defaultChannelId = 1;
 
@@ -9,6 +10,7 @@ export {
 
 export default configureStore({
   reducer: {
-    ui: channelsReducers,
+    channels: channelsReducers,
+    messages: messagesReducers,
   },
 });
