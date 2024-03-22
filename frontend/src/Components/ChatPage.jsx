@@ -8,7 +8,8 @@ import ChannelsBox from './ChannelsBox.jsx';
 import ChatBox from './ChatBox.jsx';
 import Modal from './Modals.jsx';
 import useAuth from '../Hooks/index.jsx';
-import { actions, selectors } from '../Slices/channelsSlice.js';
+import { actions as channelsActions } from '../Slices/channelsSlice.js';
+// import { actions as messagesActions } from '../Slices/messagesSlice.js';
 
 const ChatPage = () => {
   const dispatch = useDispatch();
@@ -17,16 +18,15 @@ const ChatPage = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchDataChannels = async () => {
       try {
         const { data } = await axios.get('api/v1/channels', {
           headers: getAuthHeader(),
         });
-        const { channels, currentChannelId } = data;
-        dispatch(actions.addChannels(channels));
-        dispatch(actions.setCurrentChannel(currentChannelId));
+        dispatch(channelsActions.addChannels(data));
       } catch (error) {
         if (!error.isAxiosError) {
+          console.log(error);
           toast.error(t('errors.unknown'));
         } else {
           toast.error(t('errors.network'));
@@ -34,13 +34,31 @@ const ChatPage = () => {
 
         throw error;
       }
-      setLoading(false);
     };
+    // const fetchDataMessages = async () => {
+    //   try {
+    //     const data = await axios.get('api/v1/messages', {
+    //       headers: getAuthHeader(),
+    //     });
+    //     dispatch(messagesActions.addMessages(data));
+    //   } catch (error) {
+    //     if (!error.isAxiosError) {
+    //       console.log(error);
+    //       toast.error(t('errors.unknown'));
+    //     } else {
+    //       toast.error(t('errors.network'));
+    //     }
 
-    fetchData();
+    //     throw error;
+    //   }
+    // };
+
+    setLoading(false);
+    fetchDataChannels();
+    // fetchDataMessages();
   }, [dispatch, getAuthHeader, t]);
 
-  const chans = useSelector(selectors.selectAll);
+  const chans = useSelector((state) => state.channels);
   console.log(chans);
 
   return loading ? (

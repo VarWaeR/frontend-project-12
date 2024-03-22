@@ -5,7 +5,7 @@ import { PlusSquare } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 import { animateScroll } from 'react-scroll';
 import { defaultChannelId } from '../Slices/index.js';
-import { actions, selectors } from '../Slices/channelsSlice.js';
+import { actions } from '../Slices/channelsSlice.js';
 
 const Channel = ({
   channel,
@@ -60,9 +60,9 @@ const Channel = ({
 const ChannelsBox = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const channels = useSelector(selectors.selectAll);
+  const channels = useSelector((state) => state.channels.channels);
 
-  const currentChannelId = useSelector((state) => state.ui.currentChannelId);
+  const currentChannelId = useSelector((state) => state.channels.currentChannelId);
   const lastChannelsItemId = channels.at(-1).id;
 
   useEffect(() => {

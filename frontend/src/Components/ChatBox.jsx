@@ -2,8 +2,6 @@ import React, { useEffect } from 'react';
 import { animateScroll } from 'react-scroll';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { selectors as selectorsChannels } from '../Slices/channelsSlice.js';
-import { selectors as selectorsMessages } from '../Slices/messagesSlice.js';
 import MessagesForm from './MessagesForm.jsx';
 
 const Message = ({ username, body }) => (
@@ -16,18 +14,18 @@ const Message = ({ username, body }) => (
 
 const ChatBox = () => {
   const { t } = useTranslation();
-  const channels = useSelector(selectorsChannels.selectAll);
+  const channels = useSelector((state) => state.channels);
   console.log(channels);
-  const allMessages = useSelector(selectorsMessages.selectAll);
+  const allMessages = useSelector((state) => state.messages);
   console.log(allMessages);
 
   const channel = useSelector((state) => {
-    const { currentChannelId } = state.ui;
+    const { currentChannelId } = state.channels;
     return channels?.find((item) => item.id === currentChannelId);
   });
 
   const messages = useSelector((state) => {
-    const { currentChannelId } = state.ui;
+    const { currentChannelId } = state.messages;
     const channelMessage = allMessages?.filter((message) => message.channelId === currentChannelId);
     return channelMessage;
   });

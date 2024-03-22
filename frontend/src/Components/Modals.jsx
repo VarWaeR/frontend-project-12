@@ -10,11 +10,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import filter from 'leo-profanity';
-import { actions, selectors } from '../Slices/channelsSlice.js';
+import { actions } from '../Slices/channelsSlice.js';
 import { useApi } from '../Hooks/index';
 
 const AddChannelForm = ({ handleClose }) => {
-  const channels = useSelector(selectors.selectAll);
+  const channels = useSelector((state) => state.channels);
   const channelNames = channels.map(({ name }) => name);
   const inputRef = useRef(null);
   const addChannel = useApi();
@@ -118,7 +118,7 @@ const RemoveChannelForm = ({ handleClose }) => {
   const deleteChannel = useApi();
   const { t } = useTranslation();
 
-  const channelId = useSelector((state) => state.ui.modal.extra?.channelId);
+  const channelId = useSelector((state) => state.channels.modal.extra?.channelId);
   const handleRemove = async () => {
     setLoading(true);
     try {
@@ -175,9 +175,9 @@ const RemoveChannelForm = ({ handleClose }) => {
 };
 
 const RenameChannelForm = ({ handleClose }) => {
-  const channels = useSelector(selectors.selectAll);
+  const channels = useSelector((state) => state.channels);
   const channelNames = channels.map(({ name }) => name);
-  const channelId = useSelector((state) => state.ui.modal.extra?.channelId);
+  const channelId = useSelector((state) => state.channels.modal.extra?.channelId);
   const channel = channels.find(({ id }) => channelId === id);
   const inputRef = useRef(null);
   const renameChannel = useApi();
@@ -275,12 +275,12 @@ const mapping = {
 
 const Modal = () => {
   const dispatch = useDispatch();
-  const isOpened = useSelector((state) => state.ui.modal.isOpened);
+  const isOpened = useSelector((state) => state.channels.modal.isOpened);
 
   const handleClose = () => {
     dispatch(actions.closeModal());
   };
-  const modalType = useSelector((state) => state.ui.modal.type);
+  const modalType = useSelector((state) => state.channels.modal.type);
 
   const Component = mapping[modalType];
 
