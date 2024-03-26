@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Dropdown, ButtonGroup } from 'react-bootstrap';
+import { animateScroll } from 'react-scroll';
 import { PlusSquare } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
-import { animateScroll } from 'react-scroll';
-import { defaultChannelId } from '../Slices/index.js';
 import { actions } from '../Slices/channelsSlice.js';
 
 const Channel = ({
@@ -61,9 +60,13 @@ const ChannelsBox = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const channels = useSelector((state) => state.channels.channels);
-
   const currentChannelId = useSelector((state) => state.channels.currentChannelId);
+  const defaultChannelId = useSelector((state) => state.channels.defaultChannelId);
+  // console.log(currentChannelId);
+  // console.log(defaultChannelId);
+  // console.log(channels);
   const lastChannelsItemId = channels.at(-1).id;
+  // console.log(lastChannelsItemId);
 
   useEffect(() => {
     if (currentChannelId === defaultChannelId) {
@@ -72,7 +75,7 @@ const ChannelsBox = () => {
     if (currentChannelId === lastChannelsItemId) {
       animateScroll.scrollToBottom({ containerId: 'channels-box', delay: 0, duration: 0 });
     }
-  }, [currentChannelId, lastChannelsItemId]);
+  }, [currentChannelId, lastChannelsItemId, defaultChannelId]);
 
   const handleChooseChannel = (channelId) => () => {
     dispatch(actions.setCurrentChannel({ channelId }));

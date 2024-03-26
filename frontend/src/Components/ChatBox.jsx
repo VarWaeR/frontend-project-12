@@ -14,10 +14,8 @@ const Message = ({ username, body }) => (
 
 const ChatBox = () => {
   const { t } = useTranslation();
-  const channels = useSelector((state) => state.channels);
-  console.log(channels);
-  const allMessages = useSelector((state) => state.messages);
-  console.log(allMessages);
+  const channels = useSelector((state) => state.channels.channels);
+  const allMessages = useSelector((state) => state.messages.messages);
 
   const channel = useSelector((state) => {
     const { currentChannelId } = state.channels;
@@ -25,7 +23,7 @@ const ChatBox = () => {
   });
 
   const messages = useSelector((state) => {
-    const { currentChannelId } = state.messages;
+    const { currentChannelId } = state.channels;
     const channelMessage = allMessages?.filter((message) => message.channelId === currentChannelId);
     return channelMessage;
   });

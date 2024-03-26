@@ -1,19 +1,19 @@
 import React, { useEffect, useRef } from 'react';
 import { Form, InputGroup, Button } from 'react-bootstrap';
+import axios from 'axios';
 import { Send } from 'react-bootstrap-icons';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import filter from 'leo-profanity';
-import useAuth, { useApi } from '../Hooks/index.jsx';
+import useAuth from '../Hooks/index.jsx';
 
 const MessagesForm = ({ channel }) => {
   const { t } = useTranslation();
-  const auth = useAuth();
-  const username = auth.currentUser;
+  const { currentUser, getAuthHeader } = useAuth();
   const inputRef = useRef(null);
-  const addNewMessage = useApi();
+  const { username } = currentUser;
 
   const validationSchema = yup.object().shape({
     body: yup
@@ -32,7 +32,9 @@ const MessagesForm = ({ channel }) => {
         username,
       };
       try {
-        await addNewMessage(message);
+        await axios.post('/api/v1/messages', message, {
+          headers: getAuthHeader(),
+        });
         formik.resetForm();
         formik.setSubmitting(false);
         inputRef.current.focus();

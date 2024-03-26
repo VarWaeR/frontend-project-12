@@ -5,20 +5,21 @@ import {
   Button,
 } from 'react-bootstrap';
 import { useFormik } from 'formik';
+import axios from 'axios';
 import * as yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import filter from 'leo-profanity';
 import { actions } from '../Slices/channelsSlice.js';
-import { useApi } from '../Hooks/index';
+import useAuth from '../Hooks/index';
 
 const AddChannelForm = ({ handleClose }) => {
-  const channels = useSelector((state) => state.channels);
+  const channels = useSelector((state) => state.channels.channels);
   const channelNames = channels.map(({ name }) => name);
   const inputRef = useRef(null);
-  const addChannel = useApi();
   const { t } = useTranslation();
+  const { getAuthHeader } = useAuth();
 
   const getValidationSchema = (channelsNames) => yup.object().shape({
     name: yup
@@ -44,11 +45,14 @@ const AddChannelForm = ({ handleClose }) => {
         const filteredName = filter.clean(name);
         const channel = { name: filteredName };
         getValidationSchema(channelNames).validateSync({ name: filteredName });
-        await addChannel(channel);
+        await axios.post('/api/v1/channels', channel, {
+          headers: getAuthHeader(),
+        });
         toast.success(t('toast.add'));
         handleClose();
       } catch (error) {
         if (!error.isAxiosError) {
+          console.log(error);
           toast.error(t('errors.unknown'));
         } else {
           toast.error(t('errors.network'));
@@ -115,14 +119,16 @@ const AddChannelForm = ({ handleClose }) => {
 
 const RemoveChannelForm = ({ handleClose }) => {
   const [loading, setLoading] = useState(false);
-  const deleteChannel = useApi();
   const { t } = useTranslation();
+  const { getAuthHeader } = useAuth();
 
   const channelId = useSelector((state) => state.channels.modal.extra?.channelId);
   const handleRemove = async () => {
     setLoading(true);
     try {
-      await deleteChannel(channelId);
+      await axios.delete(`/api/v1/channels/${channelId}`, {
+        headers: getAuthHeader(),
+      });
       toast.success(t('toast.remove'));
       handleClose();
     } catch (error) {
@@ -175,13 +181,13 @@ const RemoveChannelForm = ({ handleClose }) => {
 };
 
 const RenameChannelForm = ({ handleClose }) => {
-  const channels = useSelector((state) => state.channels);
+  const channels = useSelector((state) => state.channels.channels);
   const channelNames = channels.map(({ name }) => name);
   const channelId = useSelector((state) => state.channels.modal.extra?.channelId);
   const channel = channels.find(({ id }) => channelId === id);
   const inputRef = useRef(null);
-  const renameChannel = useApi();
   const { t } = useTranslation();
+  const { getAuthHeader } = useAuth();
 
   const getValidationSchema = (channelsNames) => yup.object().shape({
     name: yup
@@ -205,7 +211,9 @@ const RenameChannelForm = ({ handleClose }) => {
       const filteredName = filter.clean(name);
       const data = { name: filteredName, id: channelId };
       getValidationSchema(channelNames).validateSync({ name: filteredName });
-      await renameChannel(data);
+      await axios.patch(`/api/v1/channels/${channelId}`, data, {
+        headers: getAuthHeader(),
+      });
       toast.success(t('toast.rename'));
       handleClose();
     },

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import Spinner from 'react-bootstrap/Spinner';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
@@ -9,7 +9,7 @@ import ChatBox from './ChatBox.jsx';
 import Modal from './Modals.jsx';
 import useAuth from '../Hooks/index.jsx';
 import { actions as channelsActions } from '../Slices/channelsSlice.js';
-// import { actions as messagesActions } from '../Slices/messagesSlice.js';
+import { actions as messagesActions } from '../Slices/messagesSlice.js';
 
 const ChatPage = () => {
   const dispatch = useDispatch();
@@ -18,12 +18,16 @@ const ChatPage = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    const fetchDataChannels = async () => {
+    const fetchData = async () => {
       try {
-        const { data } = await axios.get('api/v1/channels', {
+        const dataChannels = await axios.get('api/v1/channels', {
           headers: getAuthHeader(),
         });
-        dispatch(channelsActions.addChannels(data));
+        const dataMessages = await axios.get('api/v1/messages', {
+          headers: getAuthHeader(),
+        });
+        dispatch(channelsActions.addChannels(dataChannels.data));
+        dispatch(messagesActions.addMessages(dataMessages.data));
       } catch (error) {
         if (!error.isAxiosError) {
           console.log(error);
@@ -35,31 +39,9 @@ const ChatPage = () => {
         throw error;
       }
     };
-    // const fetchDataMessages = async () => {
-    //   try {
-    //     const data = await axios.get('api/v1/messages', {
-    //       headers: getAuthHeader(),
-    //     });
-    //     dispatch(messagesActions.addMessages(data));
-    //   } catch (error) {
-    //     if (!error.isAxiosError) {
-    //       console.log(error);
-    //       toast.error(t('errors.unknown'));
-    //     } else {
-    //       toast.error(t('errors.network'));
-    //     }
-
-    //     throw error;
-    //   }
-    // };
-
     setLoading(false);
-    fetchDataChannels();
-    // fetchDataMessages();
+    fetchData();
   }, [dispatch, getAuthHeader, t]);
-
-  const chans = useSelector((state) => state.channels);
-  console.log(chans);
 
   return loading ? (
     <div className="h-100 d-flex justify-content-center align-items-center">
