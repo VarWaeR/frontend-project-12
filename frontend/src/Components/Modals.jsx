@@ -13,6 +13,7 @@ import { toast } from 'react-toastify';
 import filter from 'leo-profanity';
 import { actions } from '../Slices/channelsSlice.js';
 import useAuth from '../Hooks/index';
+import routes from '../Routes/routes.js';
 
 const AddChannelForm = ({ handleClose }) => {
   const channels = useSelector((state) => state.channels.channels);
@@ -45,7 +46,7 @@ const AddChannelForm = ({ handleClose }) => {
         const filteredName = filter.clean(name);
         const channel = { name: filteredName };
         getValidationSchema(channelNames).validateSync({ name: filteredName });
-        await axios.post('/api/v1/channels', channel, {
+        await axios.post(routes.channelsPath(), channel, {
           headers: getAuthHeader(),
         });
         toast.success(t('toast.add'));
@@ -126,7 +127,7 @@ const RemoveChannelForm = ({ handleClose }) => {
   const handleRemove = async () => {
     setLoading(true);
     try {
-      await axios.delete(`/api/v1/channels/${channelId}`, {
+      await axios.delete(`${routes.channelsPath()}/${channelId}`, {
         headers: getAuthHeader(),
       });
       toast.success(t('toast.remove'));
@@ -211,7 +212,7 @@ const RenameChannelForm = ({ handleClose }) => {
       const filteredName = filter.clean(name);
       const data = { name: filteredName, id: channelId };
       getValidationSchema(channelNames).validateSync({ name: filteredName });
-      await axios.patch(`/api/v1/channels/${channelId}`, data, {
+      await axios.patch(`${routes.channelsPath()}/${channelId}`, data, {
         headers: getAuthHeader(),
       });
       toast.success(t('toast.rename'));

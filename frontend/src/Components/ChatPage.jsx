@@ -10,6 +10,7 @@ import Modal from './Modals.jsx';
 import useAuth from '../Hooks/index.jsx';
 import { actions as channelsActions } from '../Slices/channelsSlice.js';
 import { actions as messagesActions } from '../Slices/messagesSlice.js';
+import routes from '../Routes/routes.js';
 
 const ChatPage = () => {
   const dispatch = useDispatch();
@@ -20,10 +21,10 @@ const ChatPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const dataChannels = await axios.get('api/v1/channels', {
+        const dataChannels = await axios.get(routes.channelsPath(), {
           headers: getAuthHeader(),
         });
-        const dataMessages = await axios.get('api/v1/messages', {
+        const dataMessages = await axios.get(routes.messagesPath(), {
           headers: getAuthHeader(),
         });
         dispatch(channelsActions.addChannels(dataChannels.data));

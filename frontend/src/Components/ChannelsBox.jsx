@@ -62,11 +62,7 @@ const ChannelsBox = () => {
   const channels = useSelector((state) => state.channels.channels);
   const currentChannelId = useSelector((state) => state.channels.currentChannelId);
   const defaultChannelId = useSelector((state) => state.channels.defaultChannelId);
-  // console.log(currentChannelId);
-  // console.log(defaultChannelId);
-  // console.log(channels);
-  const lastChannelsItemId = channels.at(-1).id;
-  // console.log(lastChannelsItemId);
+  const lastChannelsItemId = channels.at(-1)?.id;
 
   useEffect(() => {
     if (currentChannelId === defaultChannelId) {

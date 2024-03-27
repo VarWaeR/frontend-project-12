@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import filter from 'leo-profanity';
 import useAuth from '../Hooks/index.jsx';
+import routes from '../Routes/routes.js';
 
 const MessagesForm = ({ channel }) => {
   const { t } = useTranslation();
@@ -32,7 +33,7 @@ const MessagesForm = ({ channel }) => {
         username,
       };
       try {
-        await axios.post('/api/v1/messages', message, {
+        await axios.post(routes.messagesPath(), message, {
           headers: getAuthHeader(),
         });
         formik.resetForm();
