@@ -30,7 +30,6 @@ const slice = createSlice({
       renamingChannel.name = payload.name;
     },
     setCurrentChannel: (state, { payload }) => {
-      console.log(payload);
       const { id } = payload;
       state.currentChannelId = id;
     },
