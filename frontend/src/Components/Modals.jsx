@@ -21,6 +21,7 @@ const AddChannelForm = ({ handleClose }) => {
   const inputRef = useRef(null);
   const { t } = useTranslation();
   const { getAuthHeader } = useAuth();
+  const dispatch = useDispatch();
 
   const getValidationSchema = (channelsNames) => yup.object().shape({
     name: yup
@@ -46,11 +47,12 @@ const AddChannelForm = ({ handleClose }) => {
         const filteredName = filter.clean(name);
         const channel = { name: filteredName };
         getValidationSchema(channelNames).validateSync({ name: filteredName });
-        await axios.post(routes.channelsPath(), channel, {
+        const { data } = await axios.post(routes.channelsPath(), channel, {
           headers: getAuthHeader(),
         });
         toast.success(t('toast.add'));
         handleClose();
+        dispatch(actions.setCurrentChannel(data));
       } catch (error) {
         if (!error.isAxiosError) {
           console.log(error);

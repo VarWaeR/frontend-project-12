@@ -19,7 +19,6 @@ const slice = createSlice({
     },
     addChannel: (state, { payload }) => {
       state.channels.push(payload);
-      state.currentChannelId = payload.id;
     },
     removeChannel: (state, { payload }) => {
       const newChannels = state.channels.filter((channel) => channel.id !== payload);
@@ -31,8 +30,9 @@ const slice = createSlice({
       renamingChannel.name = payload.name;
     },
     setCurrentChannel: (state, { payload }) => {
-      const { channelId } = payload;
-      state.currentChannelId = channelId;
+      console.log(payload);
+      const { id } = payload;
+      state.currentChannelId = id;
     },
     openModal: (state, { payload }) => {
       const { type, extra } = payload;

@@ -73,8 +73,8 @@ const ChannelsBox = () => {
     }
   }, [currentChannelId, lastChannelsItemId, defaultChannelId]);
 
-  const handleChooseChannel = (channelId) => () => {
-    dispatch(actions.setCurrentChannel({ channelId }));
+  const handleChooseChannel = (id) => () => {
+    dispatch(actions.setCurrentChannel({ id }));
   };
   const handleAddChannel = () => {
     dispatch(actions.openModal({ type: 'addChannel' }));
