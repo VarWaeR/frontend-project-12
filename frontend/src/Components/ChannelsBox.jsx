@@ -4,7 +4,8 @@ import { Button, Dropdown, ButtonGroup } from 'react-bootstrap';
 import { animateScroll } from 'react-scroll';
 import { PlusSquare } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
-import { actions } from '../Slices/channelsSlice.js';
+import { actions as channelsActions } from '../Slices/channelsSlice.js';
+import { actions as modalsActions } from '../Slices/modalsSlice.js';
 
 const Channel = ({
   channel,
@@ -74,16 +75,16 @@ const ChannelsBox = () => {
   }, [currentChannelId, lastChannelsItemId, defaultChannelId]);
 
   const handleChooseChannel = (id) => () => {
-    dispatch(actions.setCurrentChannel({ id }));
+    dispatch(channelsActions.setCurrentChannel({ id }));
   };
   const handleAddChannel = () => {
-    dispatch(actions.openModal({ type: 'addChannel' }));
+    dispatch(modalsActions.openModal({ type: 'addChannel' }));
   };
   const handleRemoveChannel = (channelId) => () => {
-    dispatch(actions.openModal({ type: 'removeChannel', extra: { channelId } }));
+    dispatch(modalsActions.openModal({ type: 'removeChannel', extra: { channelId } }));
   };
   const handleRenameChannel = (channelId) => () => {
-    dispatch(actions.openModal({ type: 'renameChannel', extra: { channelId } }));
+    dispatch(modalsActions.openModal({ type: 'renameChannel', extra: { channelId } }));
   };
 
   return (

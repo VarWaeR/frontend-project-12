@@ -14,18 +14,19 @@ import routes from '../Routes/routes.js';
 
 const ChatPage = () => {
   const dispatch = useDispatch();
-  const { getAuthHeader } = useAuth();
+  const { getToken } = useAuth();
   const [loading, setLoading] = useState(true);
   const { t } = useTranslation();
 
   useEffect(() => {
+    const header = { Authorization: `Bearer ${getToken()}` };
     const fetchData = async () => {
       try {
         const dataChannels = await axios.get(routes.channelsPath(), {
-          headers: getAuthHeader(),
+          headers: header,
         });
         const dataMessages = await axios.get(routes.messagesPath(), {
-          headers: getAuthHeader(),
+          headers: header,
         });
         dispatch(channelsActions.addChannels(dataChannels.data));
         dispatch(messagesActions.addMessages(dataMessages.data));
@@ -40,9 +41,8 @@ const ChatPage = () => {
         throw error;
       }
     };
-    setLoading(false);
-    fetchData();
-  }, [dispatch, getAuthHeader, t]);
+    fetchData().then(() => setLoading(false));
+  }, [dispatch, getToken, t]);
 
   return loading ? (
     <div className="h-100 d-flex justify-content-center align-items-center">

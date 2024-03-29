@@ -8,7 +8,6 @@ const routes = {
   messagesPath: () => [apiPath, 'messages'].join('/'),
   main: () => '/',
   login: () => 'login',
-  error: () => '*',
   signup: () => 'signup',
 };
 

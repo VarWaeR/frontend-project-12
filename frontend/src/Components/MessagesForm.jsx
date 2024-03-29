@@ -6,15 +6,15 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-import filter from 'leo-profanity';
-import useAuth from '../Hooks/index.jsx';
+import useAuth, { useFilter } from '../Hooks/index.jsx';
 import routes from '../Routes/routes.js';
 
 const MessagesForm = ({ channel }) => {
   const { t } = useTranslation();
-  const { currentUser, getAuthHeader } = useAuth();
+  const { currentUser, getToken } = useAuth();
   const inputRef = useRef(null);
   const { username } = currentUser;
+  const filter = useFilter();
 
   const validationSchema = yup.object().shape({
     body: yup
@@ -33,8 +33,9 @@ const MessagesForm = ({ channel }) => {
         username,
       };
       try {
+        const header = { Authorization: `Bearer ${getToken()}` };
         await axios.post(routes.messagesPath(), message, {
-          headers: getAuthHeader(),
+          headers: header,
         });
         formik.resetForm();
         formik.setSubmitting(false);

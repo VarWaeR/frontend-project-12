@@ -26,10 +26,10 @@ const AuthProvider = ({ children }) => {
     localStorage.removeItem('userId');
     setLoggedIn(false);
   };
-  const getAuthHeader = () => {
+  const getToken = () => {
     const userData = JSON.parse(localStorage.getItem('userId'));
 
-    return userData?.token ? { Authorization: `Bearer ${userData.token}` } : {};
+    return userData?.token ? userData.token : {};
   };
 
   return (
@@ -38,7 +38,7 @@ const AuthProvider = ({ children }) => {
       loggedIn,
       logIn,
       logOut,
-      getAuthHeader,
+      getToken,
     }}
     >
       {children}
@@ -61,7 +61,7 @@ const App = () => (
       <div className="d-flex flex-column h-100">
         <Header />
         <Routes>
-          <Route path={routes.error()} element={<ErrorPage />} />
+          <Route path="*" element={<ErrorPage />} />
           <Route path={routes.signup()} element={<SignUpPage />} />
           <Route
             path={routes.main()}

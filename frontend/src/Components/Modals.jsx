@@ -10,9 +10,9 @@ import * as yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-import filter from 'leo-profanity';
-import { actions } from '../Slices/channelsSlice.js';
-import useAuth from '../Hooks/index';
+import { actions as channelsActions } from '../Slices/channelsSlice.js';
+import { actions as modalsActions } from '../Slices/modalsSlice.js';
+import useAuth, { useFilter } from '../Hooks/index';
 import routes from '../Routes/routes.js';
 
 const AddChannelForm = ({ handleClose }) => {
@@ -20,8 +20,9 @@ const AddChannelForm = ({ handleClose }) => {
   const channelNames = channels.map(({ name }) => name);
   const inputRef = useRef(null);
   const { t } = useTranslation();
-  const { getAuthHeader } = useAuth();
+  const { getToken } = useAuth();
   const dispatch = useDispatch();
+  const filter = useFilter();
 
   const getValidationSchema = (channelsNames) => yup.object().shape({
     name: yup
@@ -44,15 +45,16 @@ const AddChannelForm = ({ handleClose }) => {
     validationSchema: getValidationSchema(channelNames),
     onSubmit: async ({ name }) => {
       try {
+        const header = { Authorization: `Bearer ${getToken()}` };
         const filteredName = filter.clean(name);
         const channel = { name: filteredName };
         getValidationSchema(channelNames).validateSync({ name: filteredName });
         const { data } = await axios.post(routes.channelsPath(), channel, {
-          headers: getAuthHeader(),
+          headers: header,
         });
         toast.success(t('toast.add'));
         handleClose();
-        dispatch(actions.setCurrentChannel(data));
+        dispatch(channelsActions.setCurrentChannel(data));
       } catch (error) {
         if (!error.isAxiosError) {
           console.log(error);
@@ -123,14 +125,15 @@ const AddChannelForm = ({ handleClose }) => {
 const RemoveChannelForm = ({ handleClose }) => {
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
-  const { getAuthHeader } = useAuth();
+  const { getToken } = useAuth();
 
-  const channelId = useSelector((state) => state.channels.modal.extra?.channelId);
+  const channelId = useSelector((state) => state.modals.modal.extra?.channelId);
   const handleRemove = async () => {
     setLoading(true);
     try {
+      const header = { Authorization: `Bearer ${getToken()}` };
       await axios.delete(`${routes.channelsPath()}/${channelId}`, {
-        headers: getAuthHeader(),
+        headers: header,
       });
       toast.success(t('toast.remove'));
       handleClose();
@@ -186,11 +189,12 @@ const RemoveChannelForm = ({ handleClose }) => {
 const RenameChannelForm = ({ handleClose }) => {
   const channels = useSelector((state) => state.channels.channels);
   const channelNames = channels.map(({ name }) => name);
-  const channelId = useSelector((state) => state.channels.modal.extra?.channelId);
+  const channelId = useSelector((state) => state.modals.modal.extra?.channelId);
   const channel = channels.find(({ id }) => channelId === id);
   const inputRef = useRef(null);
   const { t } = useTranslation();
-  const { getAuthHeader } = useAuth();
+  const { getToken } = useAuth();
+  const filter = useFilter();
 
   const getValidationSchema = (channelsNames) => yup.object().shape({
     name: yup
@@ -211,11 +215,12 @@ const RenameChannelForm = ({ handleClose }) => {
     },
     validationSchema: getValidationSchema(channelNames),
     onSubmit: async ({ name }) => {
+      const header = { Authorization: `Bearer ${getToken()}` };
       const filteredName = filter.clean(name);
       const data = { name: filteredName, id: channelId };
       getValidationSchema(channelNames).validateSync({ name: filteredName });
       await axios.patch(`${routes.channelsPath()}/${channelId}`, data, {
-        headers: getAuthHeader(),
+        headers: header,
       });
       toast.success(t('toast.rename'));
       handleClose();
@@ -286,12 +291,12 @@ const mapping = {
 
 const Modal = () => {
   const dispatch = useDispatch();
-  const isOpened = useSelector((state) => state.channels.modal.isOpened);
+  const isOpened = useSelector((state) => state.modals.modal.isOpened);
 
   const handleClose = () => {
-    dispatch(actions.closeModal());
+    dispatch(modalsActions.closeModal());
   };
-  const modalType = useSelector((state) => state.channels.modal.type);
+  const modalType = useSelector((state) => state.modals.modal.type);
 
   const Component = mapping[modalType];
 
