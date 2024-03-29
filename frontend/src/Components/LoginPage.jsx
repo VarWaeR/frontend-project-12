@@ -105,7 +105,7 @@ const LoginPage = () => {
         <div className="text-center">
           <span>{t('login.noAccount')}</span>
           {' '}
-          <Link to={routes.signup}>{t('login.register')}</Link>
+          <Link to={routes.signup()}>{t('login.register')}</Link>
         </div>
       </div>
     </>
