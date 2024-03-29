@@ -16,7 +16,7 @@ import useAuth from '../Hooks/index.jsx';
 import routes from '../Routes/routes.js';
 
 const LoginPage = () => {
-  const auth = useAuth();
+  const { logIn } = useAuth();
   const [authFailed, setAuthFailed] = useState(false);
   const navigate = useNavigate();
   const inputRef = useRef();
@@ -41,8 +41,7 @@ const LoginPage = () => {
 
       try {
         const res = await axios.post(routes.loginPath(), values);
-        localStorage.setItem('userId', JSON.stringify(res.data));
-        auth.logIn();
+        logIn(res.data);
         navigate(routes.main());
       } catch (err) {
         formik.setSubmitting(false);
@@ -106,7 +105,7 @@ const LoginPage = () => {
         <div className="text-center">
           <span>{t('login.noAccount')}</span>
           {' '}
-          <Link to="/signup">{t('login.register')}</Link>
+          <Link to={routes.signup}>{t('login.register')}</Link>
         </div>
       </div>
     </>

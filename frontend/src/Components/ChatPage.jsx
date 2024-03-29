@@ -14,7 +14,7 @@ import routes from '../Routes/routes.js';
 
 const ChatPage = () => {
   const dispatch = useDispatch();
-  const { getToken } = useAuth();
+  const { getToken, logOut } = useAuth();
   const [loading, setLoading] = useState(true);
   const { t } = useTranslation();
 
@@ -34,6 +34,8 @@ const ChatPage = () => {
         if (!error.isAxiosError) {
           console.log(error);
           toast.error(t('errors.unknown'));
+        } else if (error.responce.status === 401) {
+          logOut();
         } else {
           toast.error(t('errors.network'));
         }
@@ -42,7 +44,7 @@ const ChatPage = () => {
       }
     };
     fetchData().then(() => setLoading(false));
-  }, [dispatch, getToken, t]);
+  }, [dispatch, getToken, logOut, t]);
 
   return loading ? (
     <div className="h-100 d-flex justify-content-center align-items-center">

@@ -21,7 +21,10 @@ const AuthProvider = ({ children }) => {
   const currentUser = JSON.parse(localStorage.getItem('userId'));
   const [loggedIn, setLoggedIn] = useState(currentUser ? { username: currentUser.username } : null);
 
-  const logIn = () => setLoggedIn(true);
+  const logIn = (loginData) => {
+    localStorage.setItem('userId', JSON.stringify(loginData));
+    setLoggedIn(true);
+  };
   const logOut = () => {
     localStorage.removeItem('userId');
     setLoggedIn(false);
